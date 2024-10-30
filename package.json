@@ -22,7 +22,7 @@
     "arbitrum",
     "dex"
   ],
-  "author": "Nomeida",
+  "author": "Nomeida/elkadro",
   "license": "MIT",
   "dependencies": {
     "@msgpack/msgpack": "^3.0.0-beta2",
