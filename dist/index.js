@@ -26,7 +26,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Hyperliquid = void 0;
+exports.Hyperliquid = exports.InfoAPI = exports.ExchangeAPI = void 0;
 const info_1 = require("./rest/info");
 const exchange_1 = require("./rest/exchange");
 const connection_1 = require("./websocket/connection");
@@ -36,6 +36,10 @@ const CONSTANTS = __importStar(require("./types/constants"));
 const custom_1 = require("./rest/custom");
 const symbolConversion_1 = require("./utils/symbolConversion");
 const errors_1 = require("./utils/errors");
+var exchange_2 = require("./rest/exchange");
+Object.defineProperty(exports, "ExchangeAPI", { enumerable: true, get: function () { return exchange_2.ExchangeAPI; } });
+var info_2 = require("./rest/info");
+Object.defineProperty(exports, "InfoAPI", { enumerable: true, get: function () { return info_2.InfoAPI; } });
 class Hyperliquid {
     constructor(turnkeySigner = null, testnet = false, walletAddress = null) {
         this.isValidPrivateKey = false;

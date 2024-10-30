@@ -4,6 +4,8 @@ import { WebSocketClient } from './websocket/connection';
 import { WebSocketSubscriptions } from './websocket/subscriptions';
 import { CustomOperations } from './rest/custom';
 import { TurnkeySigner } from "@alchemy/aa-signers";
+export { ExchangeAPI } from './rest/exchange';
+export { InfoAPI } from './rest/info';
 export declare class Hyperliquid {
     info: InfoAPI;
     exchange: ExchangeAPI;
