@@ -11,6 +11,8 @@ import { AuthenticationError } from './utils/errors';
 import { TurnkeySigner } from "@alchemy/aa-signers";
 
 
+export { ExchangeAPI } from './rest/exchange';
+export { InfoAPI } from './rest/info';
 
 export class Hyperliquid {
   public info: InfoAPI;

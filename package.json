@@ -1,6 +1,6 @@
 {
   "name": "hyperliquid",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "SDK for Hyperliquid API",
   "main": "src/index.ts",
   "types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
     "arbitrum",
     "dex"
   ],
-  "author": "Nomeida",
+  "author": "Nomeida/elkadro",
   "license": "MIT",
   "dependencies": {
     "@msgpack/msgpack": "^3.0.0-beta2",
