@@ -1,7 +1,7 @@
 {
-  "name": "hyperliquid",
+  "name": "hyperliquid-turnkey",
   "version": "1.3.2",
-  "description": "SDK for Hyperliquid API",
+  "description": "SDK for Hyperliquid API with turnkey api Integration",
   "main": "src/index.ts",
   "types": "dist/index.d.ts",
   "files": ["src"],
