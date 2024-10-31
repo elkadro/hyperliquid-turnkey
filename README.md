@@ -7,7 +7,7 @@ All info on the Hyperliquid API can be found here: [HyperLiquid API Documentatio
 ## Installation
 
 ```bash
-npm install --save hyperliquid
+yarn add hyperliquid-turnkey @alchemy/aa-signers
 ```
 
 
@@ -19,10 +19,11 @@ npm install --save hyperliquid
 If you don't do this you will be unable to use some of the SDK methods successfully. If you are using
 your own Private Key then it's not necessary as the SDK can derive your wallet address from the Private key.
 ```typescript
-const { Hyperliquid } = require('hyperliquid');
+const { Hyperliquid } = require('hyperliquid-turnkey');
+import { TurnkeySigner } from "@alchemy/aa-signers";
 
 const sdk = new Hyperliquid(
-  <private_key - string>,
+  <turnkeySigner - TurnkeySigner>,
   <testnet - boolean (OPTIONAL)>,
   <walletAddress - string (Required if you are using an API Agent Wallet, otherwise not necessary)>
 );
