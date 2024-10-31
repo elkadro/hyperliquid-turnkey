@@ -2,7 +2,6 @@ import { encode } from '@msgpack/msgpack';
 import { ethers, getBytes, HDNodeWallet, keccak256, type Wallet } from 'ethers';
 
 import type { OrderType, Signature, OrderRequest, CancelOrderRequest, OrderWire } from '../types';
-import { TurnkeySigner } from '@alchemy/aa-signers';
 
 const phantomDomain = {
     name: 'Exchange',
@@ -58,7 +57,7 @@ function constructPhantomAgent(hash: string, isMainnet: boolean) {
 }
 
 export async function signL1Action(
-    turnkeySigner: TurnkeySigner,
+    turnkeySigner: any,
     action: unknown,
     activePool: string | null,
     nonce: number,
@@ -76,7 +75,7 @@ export async function signL1Action(
 }
 
 export async function signUserSignedAction(
-    turnkeySigner: TurnkeySigner,
+    turnkeySigner: any,
     action: any,
     payloadTypes: Array<{ name: string; type: string }>,
     primaryType: string,
@@ -101,7 +100,7 @@ export async function signUserSignedAction(
 }
 
 export async function signUsdTransferAction(
-    turnkeySigner: TurnkeySigner, action: any, isMainnet: boolean): Promise<Signature> {
+    turnkeySigner: any, action: any, isMainnet: boolean): Promise<Signature> {
     return signUserSignedAction(
         turnkeySigner,
         action,
@@ -117,7 +116,7 @@ export async function signUsdTransferAction(
 }
 
 export async function signWithdrawFromBridgeAction(
-    turnkeySigner: TurnkeySigner, action: any, isMainnet: boolean): Promise<Signature> {
+    turnkeySigner: any, action: any, isMainnet: boolean): Promise<Signature> {
     return signUserSignedAction(
         turnkeySigner,
         action,
@@ -133,7 +132,7 @@ export async function signWithdrawFromBridgeAction(
 }
 
 export async function signAgent(
-    turnkeySigner: TurnkeySigner, action: any, isMainnet: boolean): Promise<Signature> {
+    turnkeySigner: any, action: any, isMainnet: boolean): Promise<Signature> {
     return signUserSignedAction(
         turnkeySigner,
         action,
@@ -149,7 +148,7 @@ export async function signAgent(
 }
 
 async function signInner(
-    turnkeySigner: TurnkeySigner, data: any): Promise<Signature> {
+    turnkeySigner: any, data: any): Promise<Signature> {
     const signature = await turnkeySigner.signTypedData(data);
     return splitSig(signature);
 }

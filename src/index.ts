@@ -8,7 +8,6 @@ import { CustomOperations } from './rest/custom';
 import { ethers } from 'ethers';
 import { SymbolConversion } from './utils/symbolConversion';
 import { AuthenticationError } from './utils/errors';
-import { TurnkeySigner } from "@alchemy/aa-signers";
 
 
 export { ExchangeAPI } from './rest/exchange';
@@ -26,7 +25,7 @@ export class Hyperliquid {
   private isValidPrivateKey: boolean = false;
   private walletAddress: string | null = null;
 
-  constructor(turnkeySigner: TurnkeySigner | null = null, testnet: boolean = false, walletAddress: string | null = null) {
+  constructor(turnkeySigner: any | null = null, testnet: boolean = false, walletAddress: string | null = null) {
     const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
 
     this.rateLimiter = new RateLimiter();
@@ -58,7 +57,7 @@ export class Hyperliquid {
     });
   }
 
-  private initializeWithTurnkey(turnkeySigner: TurnkeySigner, testnet: boolean = false): void {
+  private initializeWithTurnkey(turnkeySigner: any, testnet: boolean = false): void {
     try {
       
       this.exchange = new ExchangeAPI(testnet, turnkeySigner, this.info, this.rateLimiter, this.symbolConversion, this.walletAddress);

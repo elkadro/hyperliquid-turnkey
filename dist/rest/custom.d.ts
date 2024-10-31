@@ -3,7 +3,6 @@ import { ExchangeAPI } from './exchange';
 import { OrderResponse } from '../types/index';
 import { CancelOrderResponse } from '../utils/signing';
 import { SymbolConversion } from '../utils/symbolConversion';
-import { TurnkeySigner } from '@alchemy/aa-signers';
 export declare class CustomOperations {
     private exchange;
     private infoApi;
@@ -11,7 +10,7 @@ export declare class CustomOperations {
     private symbolConversion;
     private walletAddress;
     private turnkeySignerAddress;
-    constructor(exchange: ExchangeAPI, infoApi: InfoAPI, turnkeySigner: TurnkeySigner, symbolConversion: SymbolConversion, walletAddress?: string | null);
+    constructor(exchange: ExchangeAPI, infoApi: InfoAPI, turnkeySigner: any, symbolConversion: SymbolConversion, walletAddress?: string | null);
     cancelAllOrders(symbol?: string): Promise<CancelOrderResponse>;
     getAllAssets(): Promise<{
         perp: string[];

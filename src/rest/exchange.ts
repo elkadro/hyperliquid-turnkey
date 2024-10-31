@@ -21,13 +21,12 @@ import {
 import { ExchangeType, ENDPOINTS } from '../types/constants';
 import { SymbolConversion } from '../utils/symbolConversion';
 import { floatToWire } from '../utils/signing';
-import { TurnkeySigner } from '@alchemy/aa-signers';
 
 
 // const IS_MAINNET = true; // Make sure this matches the IS_MAINNET in signing.ts
 
 export class ExchangeAPI {
-  private turnkeySigner: TurnkeySigner;
+  private turnkeySigner: any;
   private httpApi: HttpApi;
   private symbolConversion: SymbolConversion;
   private IS_MAINNET = true;
@@ -36,7 +35,7 @@ export class ExchangeAPI {
 
   constructor(
     testnet: boolean,
-    turnkeySigner: TurnkeySigner,
+    turnkeySigner: any,
     private info: InfoAPI,
     rateLimiter: RateLimiter,
     symbolConversion: SymbolConversion,

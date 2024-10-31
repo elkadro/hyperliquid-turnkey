@@ -3,7 +3,6 @@ import { ExchangeAPI } from './rest/exchange';
 import { WebSocketClient } from './websocket/connection';
 import { WebSocketSubscriptions } from './websocket/subscriptions';
 import { CustomOperations } from './rest/custom';
-import { TurnkeySigner } from "@alchemy/aa-signers";
 export { ExchangeAPI } from './rest/exchange';
 export { InfoAPI } from './rest/info';
 export declare class Hyperliquid {
@@ -16,7 +15,7 @@ export declare class Hyperliquid {
     private symbolConversion;
     private isValidPrivateKey;
     private walletAddress;
-    constructor(turnkeySigner?: TurnkeySigner | null, testnet?: boolean, walletAddress?: string | null);
+    constructor(turnkeySigner?: any | null, testnet?: boolean, walletAddress?: string | null);
     private createAuthenticatedProxy;
     private initializeWithTurnkey;
     isAuthenticated(): boolean;

@@ -8,17 +8,16 @@ import { OrderResponse, CancelOrderRequest, OrderRequest, OrderType } from '../t
 import { CancelOrderResponse } from '../utils/signing'
 import { SymbolConversion } from '../utils/symbolConversion';
 import { floatToWire } from '../utils/signing';
-import { TurnkeySigner } from '@alchemy/aa-signers';
 
 export class CustomOperations {
     private exchange: ExchangeAPI;
     private infoApi: InfoAPI;
-    private turnkeySigner: TurnkeySigner;
+    private turnkeySigner: any;
     private symbolConversion: SymbolConversion;
     private walletAddress: string | null;
     private turnkeySignerAddress: string = "";
 
-    constructor(exchange: ExchangeAPI, infoApi: InfoAPI, turnkeySigner: TurnkeySigner, symbolConversion: SymbolConversion, walletAddress: string | null = null) {
+    constructor(exchange: ExchangeAPI, infoApi: InfoAPI, turnkeySigner: any, symbolConversion: SymbolConversion, walletAddress: string | null = null) {
         this.exchange = exchange;
         this.infoApi = infoApi;
         this.turnkeySigner = turnkeySigner;
