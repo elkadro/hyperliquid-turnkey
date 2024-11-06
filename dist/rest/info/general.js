@@ -35,6 +35,10 @@ class GeneralInfoAPI {
         const response = await this.httpApi.makeRequest({ type: constants_1.InfoType.USER_FILLS, user: user }, 20);
         return rawResponse ? response : await this.symbolConversion.convertResponse(response);
     }
+    async getUserFees(user, rawResponse = false) {
+        const response = await this.httpApi.makeRequest({ type: constants_1.InfoType.USER_FEES, user: user }, 20);
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
     async getUserFillsByTime(user, startTime, endTime, rawResponse = false) {
         let params = {
             user: user,

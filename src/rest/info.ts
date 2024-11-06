@@ -63,6 +63,10 @@ export class InfoAPI {
         return this.generalAPI.getUserFills(user, rawResponse);
     }
 
+    async getUserFees(user: string, rawResponse: boolean = false): Promise<any> {
+        return this.generalAPI.getUserFees(user, rawResponse);
+    }
+
     async getUserFillsByTime(user: string, startTime: number, endTime: number, rawResponse: boolean = false): Promise<UserFills> {
         return this.generalAPI.getUserFillsByTime(user, startTime, endTime, rawResponse);
     }

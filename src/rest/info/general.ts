@@ -55,6 +55,11 @@ export class GeneralInfoAPI {
         return rawResponse ? response : await this.symbolConversion.convertResponse(response);
     }
 
+    async getUserFees(user: string, rawResponse: boolean = false): Promise<any> {
+        const response = await this.httpApi.makeRequest({ type: InfoType.USER_FEES, user: user }, 20);
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
+
     async getUserFillsByTime(user: string, startTime: number, endTime?: number, rawResponse: boolean = false): Promise<UserFills> {
         let params: { user: string; startTime: number; type: string; endTime?: number } = {
             user: user,

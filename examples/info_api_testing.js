@@ -38,6 +38,10 @@ async function testInfoAPI(sdk) {
     console.log(await sdk.info.getUserFills(user_address, raw_mode));
     await waitForInput("Press Enter to continue...");
 
+    console.log("getUserFees:");
+    console.log(await sdk.info.getUserFees(user_address, raw_mode));
+    await waitForInput("Press Enter to continue...");
+
     console.log("getUserFillsByTime:");
     console.log(await sdk.info.getUserFillsByTime(user_address, Date.now() - 1506400000, Date.now(), raw_mode)); // Last 24 hours
     await waitForInput("Press Enter to continue...");
