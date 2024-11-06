@@ -9,6 +9,7 @@ export declare class GeneralInfoAPI {
     getUserOpenOrders(user: string, rawResponse?: boolean): Promise<UserOpenOrders>;
     getFrontendOpenOrders(user: string, rawResponse?: boolean): Promise<FrontendOpenOrders>;
     getUserFills(user: string, rawResponse?: boolean): Promise<UserFills>;
+    getUserFees(user: string, rawResponse?: boolean): Promise<any>;
     getUserFillsByTime(user: string, startTime: number, endTime?: number, rawResponse?: boolean): Promise<UserFills>;
     getUserRateLimit(user: string, rawResponse?: boolean): Promise<UserRateLimit>;
     getOrderStatus(user: string, oid: number | string, rawResponse?: boolean): Promise<OrderStatus>;

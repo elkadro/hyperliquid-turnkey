@@ -28,7 +28,8 @@ export declare enum InfoType {
     FUNDING_HISTORY = "fundingHistory",
     SPOT_META = "spotMeta",
     SPOT_CLEARINGHOUSE_STATE = "spotClearinghouseState",
-    SPOT_META_AND_ASSET_CTXS = "spotMetaAndAssetCtxs"
+    SPOT_META_AND_ASSET_CTXS = "spotMetaAndAssetCtxs",
+    USER_FEES = "userFees"
 }
 export declare enum ExchangeType {
     ORDER = "order",

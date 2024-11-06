@@ -33,6 +33,7 @@ var InfoType;
     InfoType["SPOT_META"] = "spotMeta";
     InfoType["SPOT_CLEARINGHOUSE_STATE"] = "spotClearinghouseState";
     InfoType["SPOT_META_AND_ASSET_CTXS"] = "spotMetaAndAssetCtxs";
+    InfoType["USER_FEES"] = "userFees";
 })(InfoType || (exports.InfoType = InfoType = {}));
 var ExchangeType;
 (function (ExchangeType) {

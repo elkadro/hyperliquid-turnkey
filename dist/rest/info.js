@@ -35,6 +35,9 @@ class InfoAPI {
     async getUserFills(user, rawResponse = false) {
         return this.generalAPI.getUserFills(user, rawResponse);
     }
+    async getUserFees(user, rawResponse = false) {
+        return this.generalAPI.getUserFees(user, rawResponse);
+    }
     async getUserFillsByTime(user, startTime, endTime, rawResponse = false) {
         return this.generalAPI.getUserFillsByTime(user, startTime, endTime, rawResponse);
     }
