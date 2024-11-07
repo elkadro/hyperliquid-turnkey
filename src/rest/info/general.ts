@@ -107,4 +107,13 @@ export class GeneralInfoAPI {
         const response = await this.httpApi.makeRequest({ type: InfoType.SPOT_CLEARINGHOUSE_STATE, user: user });
         return rawResponse ? response : await this.symbolConversion.convertResponse(response);
     }
+
+    async getSpotMetaAndAssetCtxs(rawResponse: boolean = false): Promise<any> {
+        const response = await this.httpApi.makeRequest({ type: InfoType.SPOT_META_AND_ASSET_CTXS });
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
+    async getMetaAndAssetCtxs(rawResponse: boolean = false): Promise<any> {
+        const response = await this.httpApi.makeRequest({ type: InfoType.PERPS_META_AND_ASSET_CTXS });
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
 }

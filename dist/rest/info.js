@@ -59,6 +59,12 @@ class InfoAPI {
     async getClearinghouseSpotState(user, rawResponse = false) {
         return this.generalAPI.getClearinghouseSpotState(user, rawResponse);
     }
+    async getSpotMetaAndAssetCtxs(rawResponse = false) {
+        return this.generalAPI.getSpotMetaAndAssetCtxs(rawResponse);
+    }
+    async getMetaAndAssetCtxs(rawResponse = false) {
+        return this.generalAPI.getMetaAndAssetCtxs(rawResponse);
+    }
 }
 exports.InfoAPI = InfoAPI;
 //# sourceMappingURL=info.js.map

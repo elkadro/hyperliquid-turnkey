@@ -93,4 +93,11 @@ export class InfoAPI {
     async getClearinghouseSpotState(user: string, rawResponse: boolean = false): Promise<any> {
         return this.generalAPI.getClearinghouseSpotState(user, rawResponse);
     }
+
+    async getSpotMetaAndAssetCtxs(rawResponse: boolean = false): Promise<any> {
+        return this.generalAPI.getSpotMetaAndAssetCtxs(rawResponse);
+    }
+    async getMetaAndAssetCtxs(rawResponse: boolean = false): Promise<any> {
+        return this.generalAPI.getMetaAndAssetCtxs(rawResponse);
+    }
 }

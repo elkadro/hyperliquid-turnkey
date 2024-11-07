@@ -78,6 +78,14 @@ class GeneralInfoAPI {
         const response = await this.httpApi.makeRequest({ type: constants_1.InfoType.SPOT_CLEARINGHOUSE_STATE, user: user });
         return rawResponse ? response : await this.symbolConversion.convertResponse(response);
     }
+    async getSpotMetaAndAssetCtxs(rawResponse = false) {
+        const response = await this.httpApi.makeRequest({ type: constants_1.InfoType.SPOT_META_AND_ASSET_CTXS });
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
+    async getMetaAndAssetCtxs(rawResponse = false) {
+        const response = await this.httpApi.makeRequest({ type: constants_1.InfoType.PERPS_META_AND_ASSET_CTXS });
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
 }
 exports.GeneralInfoAPI = GeneralInfoAPI;
 //# sourceMappingURL=general.js.map

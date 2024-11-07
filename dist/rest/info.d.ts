@@ -28,4 +28,6 @@ export declare class InfoAPI {
     getCandleSnapshot(coin: string, interval: string, startTime: number, endTime: number, rawResponse?: boolean): Promise<CandleSnapshot>;
     getClearinghouseState(user: string, rawResponse?: boolean): Promise<any>;
     getClearinghouseSpotState(user: string, rawResponse?: boolean): Promise<any>;
+    getSpotMetaAndAssetCtxs(rawResponse?: boolean): Promise<any>;
+    getMetaAndAssetCtxs(rawResponse?: boolean): Promise<any>;
 }
