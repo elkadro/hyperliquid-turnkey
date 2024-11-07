@@ -26,4 +26,6 @@ export declare class InfoAPI {
     getOrderStatus(user: string, oid: number | string, rawResponse?: boolean): Promise<OrderStatus>;
     getL2Book(coin: string, rawResponse?: boolean): Promise<L2Book>;
     getCandleSnapshot(coin: string, interval: string, startTime: number, endTime: number, rawResponse?: boolean): Promise<CandleSnapshot>;
+    getClearinghouseState(user: string, rawResponse?: boolean): Promise<any>;
+    getClearinghouseSpotState(user: string, rawResponse?: boolean): Promise<any>;
 }

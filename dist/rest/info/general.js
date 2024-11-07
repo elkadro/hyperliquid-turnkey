@@ -70,6 +70,14 @@ class GeneralInfoAPI {
         });
         return rawResponse ? response : await this.symbolConversion.convertResponse(response, ["s"]);
     }
+    async getClearinghouseState(user, rawResponse = false) {
+        const response = await this.httpApi.makeRequest({ type: constants_1.InfoType.PERPS_CLEARINGHOUSE_STATE, user: user });
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
+    async getClearinghouseSpotState(user, rawResponse = false) {
+        const response = await this.httpApi.makeRequest({ type: constants_1.InfoType.SPOT_CLEARINGHOUSE_STATE, user: user });
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
 }
 exports.GeneralInfoAPI = GeneralInfoAPI;
 //# sourceMappingURL=general.js.map

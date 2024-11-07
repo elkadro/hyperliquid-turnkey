@@ -53,6 +53,12 @@ class InfoAPI {
     async getCandleSnapshot(coin, interval, startTime, endTime, rawResponse = false) {
         return this.generalAPI.getCandleSnapshot(coin, interval, startTime, endTime, rawResponse);
     }
+    async getClearinghouseState(user, rawResponse = false) {
+        return this.generalAPI.getClearinghouseState(user, rawResponse);
+    }
+    async getClearinghouseSpotState(user, rawResponse = false) {
+        return this.generalAPI.getClearinghouseSpotState(user, rawResponse);
+    }
 }
 exports.InfoAPI = InfoAPI;
 //# sourceMappingURL=info.js.map
