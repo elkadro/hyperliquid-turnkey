@@ -86,4 +86,11 @@ export class InfoAPI {
     async getCandleSnapshot(coin: string, interval: string, startTime: number, endTime: number, rawResponse: boolean = false): Promise<CandleSnapshot> {
         return this.generalAPI.getCandleSnapshot(coin, interval, startTime, endTime, rawResponse);
     }
+
+    async getClearinghouseState(user: string, rawResponse: boolean = false): Promise<any> {
+        return this.generalAPI.getClearinghouseState(user, rawResponse);
+    }
+    async getClearinghouseSpotState(user: string, rawResponse: boolean = false): Promise<any> {
+        return this.generalAPI.getClearinghouseSpotState(user, rawResponse);
+    }
 }

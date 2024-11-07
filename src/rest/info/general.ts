@@ -98,4 +98,13 @@ export class GeneralInfoAPI {
 
         return rawResponse ? response : await this.symbolConversion.convertResponse(response, ["s"]);
     }
+
+    async getClearinghouseState(user: string, rawResponse: boolean = false): Promise<any> {
+        const response = await this.httpApi.makeRequest({ type: InfoType.PERPS_CLEARINGHOUSE_STATE, user: user });
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
+    async getClearinghouseSpotState(user: string, rawResponse: boolean = false): Promise<any> {
+        const response = await this.httpApi.makeRequest({ type: InfoType.SPOT_CLEARINGHOUSE_STATE, user: user });
+        return rawResponse ? response : await this.symbolConversion.convertResponse(response);
+    }
 }
