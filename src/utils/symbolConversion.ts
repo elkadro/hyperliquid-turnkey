@@ -53,9 +53,9 @@ export class SymbolConversion {
     }
 
     private startPeriodicRefresh(): void {
-        this.refreshInterval = setInterval(() => {
-            this.refreshAssetMaps();
-        }, this.refreshIntervalMs);
+        // this.refreshInterval = setInterval(() => {
+        //     this.refreshAssetMaps();
+        // }, this.refreshIntervalMs);
     }
 
     public stopPeriodicRefresh(): void {
