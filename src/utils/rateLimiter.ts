@@ -4,7 +4,7 @@ export class RateLimiter {
     private readonly capacity: number;
 
     constructor() {
-        this.capacity = 1200; // 1200 tokens per minute
+        this.capacity = 600; // 1200 tokens per minute
         this.tokens = this.capacity;
         this.lastRefill = Date.now();
     }

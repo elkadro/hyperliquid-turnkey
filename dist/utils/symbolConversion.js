@@ -70,9 +70,9 @@ class SymbolConversion {
         }
     }
     startPeriodicRefresh() {
-        this.refreshInterval = setInterval(() => {
-            this.refreshAssetMaps();
-        }, this.refreshIntervalMs);
+        // this.refreshInterval = setInterval(() => {
+        //     this.refreshAssetMaps();
+        // }, this.refreshIntervalMs);
     }
     stopPeriodicRefresh() {
         if (this.refreshInterval) {
