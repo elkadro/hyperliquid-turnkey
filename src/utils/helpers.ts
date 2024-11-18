@@ -22,7 +22,7 @@ export class HttpApi {
     async makeRequest(payload: any, weight: number = 2, endpoint: string = this.endpoint,): Promise<any> {
         try {
 
-            await this.rateLimiter.waitForToken(weight);
+            await this.rateLimiter.waitForToken();
 
             const response = await this.client.post(endpoint, payload);
             return response.data;

@@ -1,37 +1,50 @@
 export class RateLimiter {
-    private tokens: number;
-    private lastUpdated: number;
-    private readonly refillRate: number; // Tokens added per millisecond
-    private readonly capacity: number;
+    private readonly interval: number; // Time interval in milliseconds for one token
+    private readonly maxRequests: number; // Maximum requests allowed
+    private tokens: number; // Available tokens
+    private lastRefill: number; // Last time tokens were refilled
+    private queue: (() => void)[] = []; // Queue of pending requests
 
-    constructor(requestsPerMinute: number = 1188) {
-        this.capacity = requestsPerMinute; // Maximum tokens (e.g., 1200/min)
-        this.refillRate = requestsPerMinute / 60000; // Tokens per millisecond
-        this.tokens = this.capacity;
-        this.lastUpdated = Date.now();
+    constructor(requestsPerMinute: number = 588) {
+        this.maxRequests = requestsPerMinute;
+        this.interval = (60 * 1000) / requestsPerMinute; // Time interval for one request
+        this.tokens = requestsPerMinute; // Start full
+        this.lastRefill = Date.now();
     }
 
     private refillTokens() {
         const now = Date.now();
-        const elapsedMs = now - this.lastUpdated;
+        const elapsed = now - this.lastRefill;
 
         // Refill tokens based on elapsed time
-        this.tokens = Math.min(this.capacity, this.tokens + elapsedMs * this.refillRate);
-        this.lastUpdated = now;
+        const newTokens = Math.floor(elapsed / this.interval);
+        if (newTokens > 0) {
+            this.tokens = Math.min(this.maxRequests, this.tokens + newTokens);
+            this.lastRefill += newTokens * this.interval; // Update last refill time
+        }
     }
 
-    async waitForToken(weight: number = 1): Promise<void> {
+    private processQueue() {
+        while (this.queue.length > 0 && this.tokens > 0) {
+            this.tokens--;
+            const resolve = this.queue.shift();
+            if (resolve) resolve(); // Release the queued request
+        }
+    }
+
+    async waitForToken(): Promise<void> {
         this.refillTokens();
 
-        if (this.tokens >= weight) {
-            this.tokens -= weight;
-            return;
+        if (this.tokens > 0) {
+            this.tokens--;
+            return; // Immediately process if tokens are available
         }
 
-        // Calculate time to wait for enough tokens
-        const timeToWait = ((weight - this.tokens) / this.refillRate);
-        return new Promise(resolve => setTimeout(resolve, timeToWait)).then(() => {
-            this.waitForToken(weight); // Check again after waiting
+        // If no tokens are available, enqueue the request
+        return new Promise<void>(resolve => {
+            this.queue.push(resolve);
+        }).then(() => {
+            this.processQueue(); // Process the queue after resolving
         });
     }
 }
