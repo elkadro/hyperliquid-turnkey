@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RateLimiter = void 0;
 class RateLimiter {
     constructor() {
-        this.capacity = 800; // < 1200 tokens per minute
+        this.capacity = 1150; // < 1200 tokens per minute
         this.tokens = this.capacity;
         this.lastRefill = Date.now();
     }
