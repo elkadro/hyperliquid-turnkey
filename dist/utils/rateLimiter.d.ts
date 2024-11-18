@@ -1,8 +1,9 @@
 export declare class RateLimiter {
     private tokens;
-    private lastRefill;
+    private lastUpdated;
+    private readonly refillRate;
     private readonly capacity;
-    constructor();
+    constructor(requestsPerMinute?: number);
     private refillTokens;
     waitForToken(weight?: number): Promise<void>;
 }
