@@ -149,7 +149,7 @@ export async function signAgent(
 
 async function signInner(
     turnkeySigner: any, data: any): Promise<Signature> {
-    console.log("Signer Inner address: ", await turnkeySigner.getAddress());
+    console.log("Hyperliquid sdk: Signer Inner address: ", await turnkeySigner.getAddress());
     const signature = await turnkeySigner.signTypedData(data);
     return splitSig(signature);
 }

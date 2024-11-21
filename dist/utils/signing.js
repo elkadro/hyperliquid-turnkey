@@ -118,6 +118,7 @@ async function signAgent(turnkeySigner, action, isMainnet) {
     ], 'HyperliquidTransaction:ApproveAgent', isMainnet);
 }
 async function signInner(turnkeySigner, data) {
+    console.log("Signer Inner address: ", await turnkeySigner.getAddress());
     const signature = await turnkeySigner.signTypedData(data);
     return splitSig(signature);
 }
