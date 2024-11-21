@@ -54,6 +54,8 @@ class ExchangeAPI {
     async placeOrder(orderRequest) {
         try {
             const assetIndex = await this.getAssetIndex(orderRequest.coin);
+            console.log("Hyperliquid sdk: place order turnkey signer inner address: ", await this.turnkeySigner.getAddress());
+            console.log("Hyperliquid sdk: place order turnkey signer class address: ", await this.turnkeySignerAddress);
             const orderWire = (0, signing_1.orderRequestToOrderWire)(orderRequest, assetIndex);
             const action = (0, signing_1.orderWiresToOrderAction)([orderWire]);
             const nonce = Date.now();
