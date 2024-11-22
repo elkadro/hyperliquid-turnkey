@@ -41,12 +41,12 @@ Object.defineProperty(exports, "ExchangeAPI", { enumerable: true, get: function 
 var info_2 = require("./rest/info");
 Object.defineProperty(exports, "InfoAPI", { enumerable: true, get: function () { return info_2.InfoAPI; } });
 class Hyperliquid {
-    constructor(turnkeySigner = null, testnet = false, walletAddress = null) {
+    constructor(turnkeySigner = null, testnet = false, walletAddress = null, _prepMeta, _spotMeta) {
         this.isValidPrivateKey = false;
         this.walletAddress = null;
         const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
         this.rateLimiter = new rateLimiter_1.RateLimiter();
-        this.symbolConversion = new symbolConversion_1.SymbolConversion(baseURL, this.rateLimiter);
+        this.symbolConversion = new symbolConversion_1.SymbolConversion(baseURL, this.rateLimiter, _prepMeta, _spotMeta);
         this.info = new info_1.InfoAPI(baseURL, this.rateLimiter, this.symbolConversion);
         this.ws = new connection_1.WebSocketClient(testnet);
         this.subscriptions = new subscriptions_1.WebSocketSubscriptions(this.ws, this.symbolConversion);

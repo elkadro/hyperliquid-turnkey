@@ -15,7 +15,7 @@ export declare class Hyperliquid {
     private symbolConversion;
     private isValidPrivateKey;
     private walletAddress;
-    constructor(turnkeySigner?: any | null, testnet?: boolean, walletAddress?: string | null);
+    constructor(turnkeySigner: any | null, testnet: boolean | undefined, walletAddress: (string | null) | undefined, _prepMeta: any, _spotMeta: any);
     private createAuthenticatedProxy;
     private initializeWithTurnkey;
     isAuthenticated(): boolean;

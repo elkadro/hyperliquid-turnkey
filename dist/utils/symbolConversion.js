@@ -27,11 +27,15 @@ exports.SymbolConversion = void 0;
 const helpers_1 = require("./helpers");
 const CONSTANTS = __importStar(require("../types/constants"));
 class SymbolConversion {
-    constructor(baseURL, rateLimiter) {
+    constructor(baseURL, rateLimiter, _perpMeta, _spotMeta) {
         this.assetToIndexMap = new Map();
         this.exchangeToInternalNameMap = new Map();
         this.refreshIntervalMs = 60000;
         this.refreshInterval = null;
+        this.perpMeta = [];
+        this.spotMeta = [];
+        this.perpMeta = _perpMeta;
+        this.spotMeta = _spotMeta;
         this.httpApi = new helpers_1.HttpApi(baseURL, CONSTANTS.ENDPOINTS.INFO, rateLimiter);
         this.initializationPromise = this.initialize();
     }
@@ -45,21 +49,24 @@ class SymbolConversion {
                 this.httpApi.makeRequest({ "type": CONSTANTS.InfoType.PERPS_META_AND_ASSET_CTXS }),
                 this.httpApi.makeRequest({ "type": CONSTANTS.InfoType.SPOT_META_AND_ASSET_CTXS })
             ]);
+            console.log("**************METAS: ");
+            console.log(JSON.stringify(perpMeta));
+            console.log(JSON.stringify(spotMeta));
             this.assetToIndexMap.clear();
             this.exchangeToInternalNameMap.clear();
             // Handle perpetual assets
-            perpMeta[0].universe.forEach((asset, index) => {
+            this.perpMeta[0].universe.forEach((asset, index) => {
                 const internalName = `${asset.name}-PERP`;
                 this.assetToIndexMap.set(internalName, index);
                 this.exchangeToInternalNameMap.set(asset.name, internalName);
             });
             // Handle spot assets
-            spotMeta[0].tokens.forEach((token) => {
-                const universeItem = spotMeta[0].universe.find((item) => item.tokens[0] === token.index);
+            this.spotMeta[0].tokens.forEach((token) => {
+                const universeItem = this.spotMeta[0].universe.find((item) => item.tokens[0] === token.index);
                 if (universeItem) {
                     const internalName = `${token.name}-SPOT`;
                     const exchangeName = universeItem.name;
-                    const index = spotMeta[0].universe.indexOf(universeItem);
+                    const index = this.spotMeta[0].universe.indexOf(universeItem);
                     this.assetToIndexMap.set(internalName, 10000 + index);
                     this.exchangeToInternalNameMap.set(exchangeName, internalName);
                 }

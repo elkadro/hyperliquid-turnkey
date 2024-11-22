@@ -25,11 +25,11 @@ export class Hyperliquid {
   private isValidPrivateKey: boolean = false;
   private walletAddress: string | null = null;
 
-  constructor(turnkeySigner: any | null = null, testnet: boolean = false, walletAddress: string | null = null) {
+  constructor(turnkeySigner: any | null = null, testnet: boolean = false, walletAddress: string | null = null, _prepMeta: any, _spotMeta: any) {
     const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
 
     this.rateLimiter = new RateLimiter();
-    this.symbolConversion = new SymbolConversion(baseURL, this.rateLimiter);
+    this.symbolConversion = new SymbolConversion(baseURL, this.rateLimiter, _prepMeta, _spotMeta);
 
     this.info = new InfoAPI(baseURL, this.rateLimiter, this.symbolConversion);
     this.ws = new WebSocketClient(testnet);

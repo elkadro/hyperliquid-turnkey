@@ -5,7 +5,9 @@ export declare class SymbolConversion {
     private refreshIntervalMs;
     private refreshInterval;
     private initializationPromise;
-    constructor(baseURL: string, rateLimiter: any);
+    private perpMeta;
+    private spotMeta;
+    constructor(baseURL: string, rateLimiter: any, _perpMeta: any, _spotMeta: any);
     private initialize;
     private refreshAssetMaps;
     private startPeriodicRefresh;
