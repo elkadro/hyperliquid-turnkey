@@ -52,9 +52,6 @@ class SymbolConversion {
                 ]);
                 this.perpMeta = perpMeta;
                 this.spotMeta = spotMeta;
-                console.log("**************METAS: ");
-                console.log(perpMeta.length);
-                console.log(spotMeta.length);
             }
             this.assetToIndexMap.clear();
             this.exchangeToInternalNameMap.clear();

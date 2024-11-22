@@ -33,9 +33,6 @@ export class SymbolConversion {
             ]);
             this.perpMeta = perpMeta;
             this.spotMeta = spotMeta;
-            console.log("**************METAS: ");
-            console.log(perpMeta[0].universe.length);
-            console.log(spotMeta[0].tokens.length);
             }
             this.assetToIndexMap.clear();
             this.exchangeToInternalNameMap.clear();
