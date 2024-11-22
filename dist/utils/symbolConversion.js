@@ -50,6 +50,8 @@ class SymbolConversion {
                     this.httpApi.makeRequest({ "type": CONSTANTS.InfoType.PERPS_META_AND_ASSET_CTXS }),
                     this.httpApi.makeRequest({ "type": CONSTANTS.InfoType.SPOT_META_AND_ASSET_CTXS })
                 ]);
+                this.perpMeta = perpMeta;
+                this.spotMeta = spotMeta;
                 console.log("**************METAS: ");
                 console.log(perpMeta.length);
                 console.log(spotMeta.length);
