@@ -45,13 +45,15 @@ class SymbolConversion {
     }
     async refreshAssetMaps() {
         try {
-            const [perpMeta, spotMeta] = await Promise.all([
-                this.httpApi.makeRequest({ "type": CONSTANTS.InfoType.PERPS_META_AND_ASSET_CTXS }),
-                this.httpApi.makeRequest({ "type": CONSTANTS.InfoType.SPOT_META_AND_ASSET_CTXS })
-            ]);
-            console.log("**************METAS: ");
-            console.log(JSON.stringify(perpMeta));
-            console.log(JSON.stringify(spotMeta));
+            if (this.perpMeta.length === 0 || this.spotMeta.length === 0) {
+                const [perpMeta, spotMeta] = await Promise.all([
+                    this.httpApi.makeRequest({ "type": CONSTANTS.InfoType.PERPS_META_AND_ASSET_CTXS }),
+                    this.httpApi.makeRequest({ "type": CONSTANTS.InfoType.SPOT_META_AND_ASSET_CTXS })
+                ]);
+                console.log("**************METAS: ");
+                console.log(perpMeta.length);
+                console.log(spotMeta.length);
+            }
             this.assetToIndexMap.clear();
             this.exchangeToInternalNameMap.clear();
             // Handle perpetual assets
