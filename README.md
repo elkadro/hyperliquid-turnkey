@@ -7,7 +7,7 @@ All info on the Hyperliquid API can be found here: [HyperLiquid API Documentatio
 ## Important
 This project supports multiple-client per machine but caching the perpMeta and spotMeta in your codebase since each one costs 20 tokens to call the api. Hence now you can create alot of clients and pass to them the global spotMeta and perpMeta. The old sdk used to call them for each client periodically.
 
-## Current Version updates for v1.4.7:
+## Current Version updates for v1.4.8:
 -Spot meta and PERP meta were being called upon client creation. Now they will be called once if the supplied meta contructor params are empty
 -Added meta contructor params so you can cache them outside the client (they cost 20 tokens each to request from the api!)
 -Changed the rate limiter and made it smooth

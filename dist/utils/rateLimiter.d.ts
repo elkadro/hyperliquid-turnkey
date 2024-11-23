@@ -1,11 +1,15 @@
 export declare class RateLimiter {
-    private readonly interval;
+    readonly interval: number;
     private readonly maxRequests;
     private tokens;
     private lastRefill;
     private queue;
+    private requestCount;
+    private lastLogTime;
     constructor(requestsPerMinute?: number);
     private refillTokens;
     private processQueue;
-    waitForToken(): Promise<void>;
+    private logRequestsPerMinute;
+    private logQueue;
+    waitForToken(weight?: number): Promise<void>;
 }
