@@ -25,6 +25,7 @@ export class SymbolConversion {
 
     private async refreshAssetMaps(): Promise<void> {
         try {
+            // You don't have to modify but you can remove the if clause if using only 1 hyperliquid instance for all your requests and stop sending the meta from outside the hyperliquidClient
             if(this.perpMeta.length === 0 || this.spotMeta.length === 0) {
 
             const [perpMeta, spotMeta] = await Promise.all([
@@ -61,6 +62,7 @@ export class SymbolConversion {
     }
 
     private startPeriodicRefresh(): void {
+        // Old when using 1 client per machine
         // this.refreshInterval = setInterval(() => {
         //     this.refreshAssetMaps();
         // }, this.refreshIntervalMs);

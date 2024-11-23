@@ -19,7 +19,7 @@ class HttpApi {
     }
     async makeRequest(payload, weight = 2, endpoint = this.endpoint) {
         try {
-            await this.rateLimiter.waitForToken();
+            await this.rateLimiter.waitForToken(weight);
             const response = await this.client.post(endpoint, payload);
             return response.data;
         }

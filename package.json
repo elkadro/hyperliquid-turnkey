@@ -1,6 +1,6 @@
 {
   "name": "hyperliquid-sdk-turnkey",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "SDK for Hyperliquid API with turnkey api Integration",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/elkadro/hyperliquid"
+    "url": "https://github.com/elkadro/hyperliquid-turnkey"
   },
   "devDependencies": {
     "dotenv": "^16.4.5"
