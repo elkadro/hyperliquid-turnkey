@@ -23,8 +23,9 @@ export class HttpApi {
         try {
 
             await this.rateLimiter.waitForToken();
-
+            const past = Date.now();
             const response = await this.client.post(endpoint, payload);
+            console.log(`Hyperliquid SDK: Request of ${endpoint} took ${Date.now() - past}ms`);
             return response.data;
         } catch (error) {
             handleApiError(error);
