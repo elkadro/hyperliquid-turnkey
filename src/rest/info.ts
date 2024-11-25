@@ -26,8 +26,8 @@ export class InfoAPI {
     private generalAPI: GeneralInfoAPI;
     private symbolConversion: SymbolConversion;
 
-    constructor(baseURL: string, rateLimiter: RateLimiter, symbolConversion: SymbolConversion) {
-        this.httpApi = new HttpApi(baseURL, ENDPOINTS.INFO, rateLimiter);
+    constructor(baseURL: string, rateLimiter: RateLimiter, symbolConversion: SymbolConversion, _proxy?: string) {
+        this.httpApi = new HttpApi(baseURL, ENDPOINTS.INFO, rateLimiter,_proxy);
         this.symbolConversion = symbolConversion;
         
         this.generalAPI = new GeneralInfoAPI(this.httpApi, this.symbolConversion);

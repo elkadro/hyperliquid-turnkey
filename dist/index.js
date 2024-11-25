@@ -41,13 +41,17 @@ Object.defineProperty(exports, "ExchangeAPI", { enumerable: true, get: function 
 var info_2 = require("./rest/info");
 Object.defineProperty(exports, "InfoAPI", { enumerable: true, get: function () { return info_2.InfoAPI; } });
 class Hyperliquid {
-    constructor(turnkeySigner = null, testnet = false, walletAddress = null, _prepMeta, _spotMeta) {
+    constructor(turnkeySigner = null, testnet = false, walletAddress, _prepMeta, _spotMeta, _proxy) {
+        this.proxy = undefined;
         this.isValidPrivateKey = false;
         this.walletAddress = null;
         const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
+        if (_proxy && _proxy.length > 0) {
+            this.proxy = _proxy;
+        }
         this.rateLimiter = new rateLimiter_1.RateLimiter();
-        this.symbolConversion = new symbolConversion_1.SymbolConversion(baseURL, this.rateLimiter, _prepMeta, _spotMeta);
-        this.info = new info_1.InfoAPI(baseURL, this.rateLimiter, this.symbolConversion);
+        this.symbolConversion = new symbolConversion_1.SymbolConversion(baseURL, this.rateLimiter, _prepMeta, _spotMeta, _proxy);
+        this.info = new info_1.InfoAPI(baseURL, this.rateLimiter, this.symbolConversion, _proxy);
         this.ws = new connection_1.WebSocketClient(testnet);
         this.subscriptions = new subscriptions_1.WebSocketSubscriptions(this.ws, this.symbolConversion);
         // Create proxy objects for exchange and custom
@@ -70,7 +74,7 @@ class Hyperliquid {
     }
     initializeWithTurnkey(turnkeySigner, testnet = false) {
         try {
-            this.exchange = new exchange_1.ExchangeAPI(testnet, turnkeySigner, this.info, this.rateLimiter, this.symbolConversion, this.walletAddress);
+            this.exchange = new exchange_1.ExchangeAPI(testnet, turnkeySigner, this.info, this.rateLimiter, this.symbolConversion, this.walletAddress, this.proxy);
             this.custom = new custom_1.CustomOperations(this.exchange, this.info, turnkeySigner, this.symbolConversion, this.walletAddress);
             this.isValidPrivateKey = true;
         }

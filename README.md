@@ -18,10 +18,12 @@ This project supports multiple-client per machine but caching the perpMeta and s
 yarn add hyperliquid-sdk-turnkey @alchemy/aa-signers
 ```
 
-## Usage if multiple clients (one client per turnkey signer) on one IP address
+## Usage:
 **Description**: If using multiple clients on same machine, the rate limit inside the client itself will be useless since it is for that client only while the api charges you per IP address. You can enforce the same ratelimit outside in your own codebase and make sure to call waitForToken function everywhere. This will be different from the rate limiter inside the hyperliquid sdk.
 
 **API Agent Wallet Usage:** If you are using API Agent wallets everything works as normal but you need to add your actual account's wallet address in the Hyperliquid object field 'walletAddress'. The wallet is the same address inside turnkey signer object.
+
+**Proxy support**: You can add an optional passthrough proxy in the contructor.
 
 ```typescript
 import { Hyperliquid, OrderRequest } from "hyperliquid-sdk-turnkey";
@@ -73,6 +75,7 @@ const sdk = new Hyperliquid(
   <walletAddress - string (Required if you are using an API Agent Wallet, otherwise not necessary)>
   <perpMeta - Array (Get it from the global the perpMeta)>
   <spotMeta - Array (Get it from the global spotMeta)>
+  <proxy - String (Optional, passthrough proxy that replaces the api base url like using AWS fireprox)>
 );
 await populateAndUseVariables(hyperLiquidClient);
 return sdk;

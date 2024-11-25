@@ -39,11 +39,12 @@ export class ExchangeAPI {
     private info: InfoAPI,
     rateLimiter: RateLimiter,
     symbolConversion: SymbolConversion,
-    walletAddress: string | null = null
+    walletAddress: string | null = null,
+    _proxy?: string
   ) {
     const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
     this.IS_MAINNET = !testnet;
-    this.httpApi = new HttpApi(baseURL, ENDPOINTS.EXCHANGE, rateLimiter);
+    this.httpApi = new HttpApi(baseURL, ENDPOINTS.EXCHANGE, rateLimiter,_proxy);
     this.turnkeySigner = turnkeySigner;
     this.symbolConversion = symbolConversion;
     this.walletAddress = walletAddress;

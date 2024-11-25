@@ -7,8 +7,8 @@ const perpetuals_1 = require("./info/perpetuals");
 const helpers_1 = require("../utils/helpers");
 const constants_1 = require("../types/constants");
 class InfoAPI {
-    constructor(baseURL, rateLimiter, symbolConversion) {
-        this.httpApi = new helpers_1.HttpApi(baseURL, constants_1.ENDPOINTS.INFO, rateLimiter);
+    constructor(baseURL, rateLimiter, symbolConversion, _proxy) {
+        this.httpApi = new helpers_1.HttpApi(baseURL, constants_1.ENDPOINTS.INFO, rateLimiter, _proxy);
         this.symbolConversion = symbolConversion;
         this.generalAPI = new general_1.GeneralInfoAPI(this.httpApi, this.symbolConversion);
         this.spot = new spot_1.SpotInfoAPI(this.httpApi, this.symbolConversion);

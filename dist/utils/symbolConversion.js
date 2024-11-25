@@ -27,7 +27,7 @@ exports.SymbolConversion = void 0;
 const helpers_1 = require("./helpers");
 const CONSTANTS = __importStar(require("../types/constants"));
 class SymbolConversion {
-    constructor(baseURL, rateLimiter, _perpMeta, _spotMeta) {
+    constructor(baseURL, rateLimiter, _perpMeta, _spotMeta, _proxy) {
         this.assetToIndexMap = new Map();
         this.exchangeToInternalNameMap = new Map();
         this.refreshIntervalMs = 60000;
@@ -36,7 +36,7 @@ class SymbolConversion {
         this.spotMeta = [];
         this.perpMeta = _perpMeta;
         this.spotMeta = _spotMeta;
-        this.httpApi = new helpers_1.HttpApi(baseURL, CONSTANTS.ENDPOINTS.INFO, rateLimiter);
+        this.httpApi = new helpers_1.HttpApi(baseURL, CONSTANTS.ENDPOINTS.INFO, rateLimiter, _proxy);
         this.initializationPromise = this.initialize();
     }
     async initialize() {

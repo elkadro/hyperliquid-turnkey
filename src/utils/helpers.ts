@@ -7,11 +7,15 @@ export class HttpApi {
     private client: AxiosInstance;
     private endpoint: string;
     private rateLimiter: RateLimiter;
+    private proxy: string | undefined = undefined;
 
-    constructor(baseUrl: string, endpoint: string = "/", rateLimiter: RateLimiter) {
+    constructor(baseUrl: string, endpoint: string = "/", rateLimiter: RateLimiter, _proxy?: string) {
+        if(_proxy) {
+            this.proxy = _proxy;
+        }
         this.endpoint = endpoint;
         this.client = axios.create({
-            baseURL: baseUrl,
+            baseURL: (this.proxy && this.proxy.length > 0) ? this.proxy : baseUrl,
             headers: {
                 'Content-Type': 'application/json',
             },

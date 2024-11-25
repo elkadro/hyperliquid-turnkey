@@ -9,7 +9,7 @@ export declare class InfoAPI {
     private httpApi;
     private generalAPI;
     private symbolConversion;
-    constructor(baseURL: string, rateLimiter: RateLimiter, symbolConversion: SymbolConversion);
+    constructor(baseURL: string, rateLimiter: RateLimiter, symbolConversion: SymbolConversion, _proxy?: string);
     getAssetIndex(assetName: string): Promise<number | undefined>;
     getInternalName(exchangeName: string): Promise<string | undefined>;
     getAllAssets(): Promise<{

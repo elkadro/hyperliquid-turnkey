@@ -30,13 +30,13 @@ const CONSTANTS = __importStar(require("../types/constants"));
 const constants_1 = require("../types/constants");
 // const IS_MAINNET = true; // Make sure this matches the IS_MAINNET in signing.ts
 class ExchangeAPI {
-    constructor(testnet, turnkeySigner, info, rateLimiter, symbolConversion, walletAddress = null) {
+    constructor(testnet, turnkeySigner, info, rateLimiter, symbolConversion, walletAddress = null, _proxy) {
         this.info = info;
         this.IS_MAINNET = true;
         this.turnkeySignerAddress = "";
         const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
         this.IS_MAINNET = !testnet;
-        this.httpApi = new helpers_1.HttpApi(baseURL, constants_1.ENDPOINTS.EXCHANGE, rateLimiter);
+        this.httpApi = new helpers_1.HttpApi(baseURL, constants_1.ENDPOINTS.EXCHANGE, rateLimiter, _proxy);
         this.turnkeySigner = turnkeySigner;
         this.symbolConversion = symbolConversion;
         this.walletAddress = walletAddress;

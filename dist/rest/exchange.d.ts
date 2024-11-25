@@ -11,7 +11,7 @@ export declare class ExchangeAPI {
     private IS_MAINNET;
     private walletAddress;
     private turnkeySignerAddress;
-    constructor(testnet: boolean, turnkeySigner: any, info: InfoAPI, rateLimiter: RateLimiter, symbolConversion: SymbolConversion, walletAddress?: string | null);
+    constructor(testnet: boolean, turnkeySigner: any, info: InfoAPI, rateLimiter: RateLimiter, symbolConversion: SymbolConversion, walletAddress?: string | null, _proxy?: string);
     private getAssetIndex;
     placeOrder(orderRequest: OrderRequest): Promise<any>;
     cancelOrder(cancelRequests: CancelOrderRequest | CancelOrderRequest[]): Promise<CancelOrderResponse>;

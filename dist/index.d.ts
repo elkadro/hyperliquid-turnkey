@@ -11,11 +11,12 @@ export declare class Hyperliquid {
     ws: WebSocketClient;
     subscriptions: WebSocketSubscriptions;
     custom: CustomOperations;
+    proxy: string | undefined;
     private rateLimiter;
     private symbolConversion;
     private isValidPrivateKey;
     private walletAddress;
-    constructor(turnkeySigner: any | null, testnet: boolean | undefined, walletAddress: (string | null) | undefined, _prepMeta: any, _spotMeta: any);
+    constructor(turnkeySigner: any | null, testnet: boolean | undefined, walletAddress: string, _prepMeta: any, _spotMeta: any, _proxy?: string);
     private createAuthenticatedProxy;
     private initializeWithTurnkey;
     isAuthenticated(): boolean;

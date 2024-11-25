@@ -11,10 +11,10 @@ export class SymbolConversion {
     private perpMeta: any = [];
     private spotMeta: any = [];
 
-    constructor(baseURL: string, rateLimiter: any, _perpMeta: any, _spotMeta: any) {
+    constructor(baseURL: string, rateLimiter: any, _perpMeta: any, _spotMeta: any, _proxy?: string) {
         this.perpMeta = _perpMeta;
         this.spotMeta = _spotMeta;
-        this.httpApi = new HttpApi(baseURL, CONSTANTS.ENDPOINTS.INFO, rateLimiter);
+        this.httpApi = new HttpApi(baseURL, CONSTANTS.ENDPOINTS.INFO, rateLimiter,_proxy);
         this.initializationPromise = this.initialize();
     }
 

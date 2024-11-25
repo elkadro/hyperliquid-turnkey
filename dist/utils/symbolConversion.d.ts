@@ -7,7 +7,7 @@ export declare class SymbolConversion {
     private initializationPromise;
     private perpMeta;
     private spotMeta;
-    constructor(baseURL: string, rateLimiter: any, _perpMeta: any, _spotMeta: any);
+    constructor(baseURL: string, rateLimiter: any, _perpMeta: any, _spotMeta: any, _proxy?: string);
     private initialize;
     private refreshAssetMaps;
     private startPeriodicRefresh;

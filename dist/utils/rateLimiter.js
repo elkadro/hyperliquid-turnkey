@@ -39,13 +39,13 @@ class RateLimiter {
         const elapsed = now - this.lastLogTime;
         if (elapsed >= 60 * 1000) {
             const rpm = this.requestCount * 1000 * 60 / elapsed;
-            console.log(`Hyperliquid Rate Limiter: Requests processed in the last minute: ${rpm.toFixed(2)}`);
+            console.log(`Hyperliquid SDK Rate Limiter: Requests processed in the last minute: ${rpm.toFixed(2)}`);
             this.requestCount = 0; // Reset count for the next minute
             this.lastLogTime = now; // Reset the log timer
         }
     }
     logQueue() {
-        console.log(`Hyperliquid Rate Limiter: Current Queue Weight: ${this.queue.reduce((sum, req) => sum + req.weight, 0)}`);
+        console.log(`Hyperliquid SDK Rate Limiter: Current Queue Weight: ${this.queue.reduce((sum, req) => sum + req.weight, 0)}`);
     }
     async waitForToken(weight = 1) {
         if (weight <= 0)

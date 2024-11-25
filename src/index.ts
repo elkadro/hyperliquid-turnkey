@@ -19,19 +19,22 @@ export class Hyperliquid {
   public ws: WebSocketClient;
   public subscriptions: WebSocketSubscriptions;
   public custom: CustomOperations;
+  public proxy: string | undefined = undefined;
 
   private rateLimiter: RateLimiter;
   private symbolConversion: SymbolConversion;
   private isValidPrivateKey: boolean = false;
   private walletAddress: string | null = null;
 
-  constructor(turnkeySigner: any | null = null, testnet: boolean = false, walletAddress: string | null = null, _prepMeta: any, _spotMeta: any) {
+  constructor(turnkeySigner: any | null = null, testnet: boolean = false, walletAddress: string, _prepMeta: any, _spotMeta: any, _proxy?: string) {
     const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
-
+    if (_proxy && _proxy.length > 0) {
+      this.proxy = _proxy
+    }
     this.rateLimiter = new RateLimiter();
-    this.symbolConversion = new SymbolConversion(baseURL, this.rateLimiter, _prepMeta, _spotMeta);
+    this.symbolConversion = new SymbolConversion(baseURL, this.rateLimiter, _prepMeta, _spotMeta,_proxy);
 
-    this.info = new InfoAPI(baseURL, this.rateLimiter, this.symbolConversion);
+    this.info = new InfoAPI(baseURL, this.rateLimiter, this.symbolConversion,_proxy);
     this.ws = new WebSocketClient(testnet);
     this.subscriptions = new WebSocketSubscriptions(this.ws, this.symbolConversion);
 
@@ -60,7 +63,7 @@ export class Hyperliquid {
   private initializeWithTurnkey(turnkeySigner: any, testnet: boolean = false): void {
     try {
       
-      this.exchange = new ExchangeAPI(testnet, turnkeySigner, this.info, this.rateLimiter, this.symbolConversion, this.walletAddress);
+      this.exchange = new ExchangeAPI(testnet, turnkeySigner, this.info, this.rateLimiter, this.symbolConversion, this.walletAddress, this.proxy);
       this.custom = new CustomOperations(this.exchange, this.info, turnkeySigner, this.symbolConversion, this.walletAddress);
       this.isValidPrivateKey = true;
     } catch (error) {
