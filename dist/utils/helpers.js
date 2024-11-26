@@ -12,6 +12,7 @@ class HttpApi {
         if (_proxy) {
             this.proxy = _proxy;
         }
+        console.log(`Hyperliquid SDK: Using proxy ${this.proxy}`);
         this.endpoint = endpoint;
         this.client = axios_1.default.create({
             baseURL: (this.proxy && this.proxy.length > 0) ? this.proxy : baseUrl,

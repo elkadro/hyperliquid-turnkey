@@ -13,6 +13,7 @@ export class HttpApi {
         if(_proxy) {
             this.proxy = _proxy;
         }
+        console.log(`Hyperliquid SDK: Using proxy ${this.proxy}`);
         this.endpoint = endpoint;
         this.client = axios.create({
             baseURL: (this.proxy && this.proxy.length > 0) ? this.proxy : baseUrl,
@@ -25,7 +26,7 @@ export class HttpApi {
 
     async makeRequest(payload: any, weight: number = 2, endpoint: string = this.endpoint,): Promise<any> {
         try {
-
+            
             await this.rateLimiter.waitForToken();
             const past = Date.now();
             const response = await this.client.post(endpoint, payload);
