@@ -1,6 +1,6 @@
 {
   "name": "hyperliquid-sdk-turnkey",
-  "version": "1.4.12",
+  "version": "1.4.13",
   "description": "SDK for Hyperliquid API with turnkey api Integration",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
