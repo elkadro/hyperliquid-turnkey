@@ -29,7 +29,14 @@ export declare enum InfoType {
     SPOT_META = "spotMeta",
     SPOT_CLEARINGHOUSE_STATE = "spotClearinghouseState",
     SPOT_META_AND_ASSET_CTXS = "spotMetaAndAssetCtxs",
-    USER_FEES = "userFees"
+    USER_FEES = "userFees",
+    VAULT_DETAILS = "vaultDetails",
+    USER_VAULT_EQUITIES = "userVaultEquities",
+    VAULT_SUMMARIES = "vaultSummaries",
+    BLOCK_DETAILS = "blockDetails",
+    TX_DETAILS = "txDetails",
+    USER_DETAILS = "userDetails",
+    SUB_ACCOUNTS = "subAccounts"
 }
 export declare enum ExchangeType {
     ORDER = "order",
@@ -45,7 +52,10 @@ export declare enum ExchangeType {
     WITHDRAW = "withdraw3",
     SPOT_USER = "spotUser",
     VAULT_TRANSFER = "vaultTransfer",
-    SET_REFERRER = "setReferrer"
+    SET_REFERRER = "setReferrer",
+    CREATE_VAULT = "createVault",
+    VAULT_DISTRIBUTE = "vaultDistribute",
+    VAULT_MODIFY = "vaultModify"
 }
 export declare const WEBSOCKET: {
     MAINNET_URL: string;

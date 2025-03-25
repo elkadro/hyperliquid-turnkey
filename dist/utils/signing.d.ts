@@ -22,5 +22,32 @@ export interface CancelOrderResponse {
         };
     };
 }
+/**
+ * Removes trailing zeros from a string representation of a number.
+ * This is useful when working with price and size fields directly.
+ *
+ * Hyperliquid API requires that price ('p') and size ('s') fields do not contain trailing zeros.
+ * For example, "12345.0" should be "12345" and "0.123450" should be "0.12345".
+ * This function ensures that all numeric string values are properly formatted.
+ *
+ * @param value - The string value to normalize
+ * @returns The normalized string without trailing zeros
+ */
+export declare function removeTrailingZeros(value: string): string;
+/**
+ * Normalizes an object by removing trailing zeros from price ('p') and size ('s') fields.
+ * This is useful when working with actions that contain these fields.
+ *
+ * Hyperliquid API requires that price ('p') and size ('s') fields do not contain trailing zeros.
+ * This function recursively processes an object and its nested properties to ensure all
+ * price and size fields are properly formatted according to API requirements.
+ *
+ * This helps prevent the "L1 error: User or API Wallet 0x... does not exist" error
+ * that can occur when trailing zeros are present in these fields.
+ *
+ * @param obj - The object to normalize
+ * @returns A new object with normalized price and size fields
+ */
+export declare function normalizeTrailingZeros<T>(obj: T): T;
 export declare function cancelOrderToAction(cancelRequest: CancelOrderRequest): any;
 export declare function orderWiresToOrderAction(orderWires: OrderWire[]): any;

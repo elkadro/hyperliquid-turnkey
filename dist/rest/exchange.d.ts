@@ -1,8 +1,9 @@
 import { RateLimiter } from '../utils/rateLimiter';
 import { InfoAPI } from './info';
 import { CancelOrderResponse } from '../utils/signing';
-import { CancelOrderRequest, OrderRequest } from '../types/index';
+import { CreateVaultResponse, CancelOrderRequest, OrderRequest } from '../types/index';
 import { SymbolConversion } from '../utils/symbolConversion';
+import { Hyperliquid } from '../index';
 export declare class ExchangeAPI {
     private info;
     private turnkeySigner;
@@ -11,7 +12,11 @@ export declare class ExchangeAPI {
     private IS_MAINNET;
     private walletAddress;
     private turnkeySignerAddress;
-    constructor(testnet: boolean, turnkeySigner: any, info: InfoAPI, rateLimiter: RateLimiter, symbolConversion: SymbolConversion, walletAddress?: string | null, _proxy?: string);
+    private parent;
+    private vaultAddress;
+    private nonceCounter;
+    private lastNonceTimestamp;
+    constructor(testnet: boolean, turnkeySigner: any, info: InfoAPI, rateLimiter: RateLimiter, symbolConversion: SymbolConversion, walletAddress: (string | null) | undefined, parent: Hyperliquid, vaultAddress?: string | null, _proxy?: string | undefined);
     private getAssetIndex;
     placeOrder(orderRequest: OrderRequest): Promise<any>;
     cancelOrder(cancelRequests: CancelOrderRequest | CancelOrderRequest[]): Promise<CancelOrderResponse>;
@@ -30,4 +35,13 @@ export declare class ExchangeAPI {
     scheduleCancel(time: number | null): Promise<any>;
     vaultTransfer(vaultAddress: string, isDeposit: boolean, usd: number): Promise<any>;
     setReferrer(code: string): Promise<any>;
+    createVault(name: string, description: string, initialUsd: number): Promise<CreateVaultResponse>;
+    vaultDistribute(vaultAddress: string, usd: number): Promise<any>;
+    vaultModify(vaultAddress: string, allowDeposits: boolean | null, alwaysCloseOnWithdraw: boolean | null): Promise<any>;
+    /**
+     * Generates a unique nonce by using the current timestamp in milliseconds
+     * If multiple calls happen in the same millisecond, it ensures the nonce is still increasing
+     * @returns A unique nonce value
+     */
+    private generateUniqueNonce;
 }

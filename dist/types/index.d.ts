@@ -436,3 +436,322 @@ export type WsUserNonFundingLedgerUpdates = {
     updates: WsUserNonFundingLedgerUpdate[];
     user: string;
 };
+export interface CreateVaultRequest {
+    name: string;
+    description: string;
+    initialUsd: number;
+}
+export interface CreateVaultResponse {
+    status: string;
+    response: {
+        type: string;
+        data: string;
+    };
+}
+export interface VaultDistributeRequest {
+    vaultAddress: string;
+    usd: number;
+}
+export interface VaultModifyRequest {
+    vaultAddress: string;
+    allowDeposits: boolean | null;
+    alwaysCloseOnWithdraw: boolean | null;
+}
+export interface VaultFollower {
+    user: string;
+    vaultEquity: string;
+    pnl: string;
+    allTimePnl: string;
+    daysFollowing: number;
+    vaultEntryTime: number;
+    lockupUntil: number;
+}
+export interface PortfolioPeriodData {
+    accountValueHistory: [number, string][];
+    pnlHistory: [number, string][];
+    vlm: string;
+}
+export interface VaultDetails {
+    name: string;
+    vaultAddress: string;
+    leader: string;
+    description: string;
+    portfolio: [string, PortfolioPeriodData][];
+    apr: number;
+    followerState: any;
+    leaderFraction: number;
+    leaderCommission: number;
+    followers: VaultFollower[];
+    maxDistributable: number;
+    maxWithdrawable: number;
+    isClosed: boolean;
+    relationship: {
+        type: string;
+        data: {
+            childAddresses: string[];
+        };
+    };
+    allowDeposits: boolean;
+    alwaysCloseOnWithdraw: boolean;
+}
+export interface VaultEquity {
+    vaultAddress: string;
+    equity: string;
+}
+export interface HistoricalOrder {
+    order: {
+        coin: string;
+        side: string;
+        limitPx: string;
+        sz: string;
+        oid: number;
+        timestamp: number;
+        triggerCondition: string;
+        isTrigger: boolean;
+        triggerPx: string;
+        children: any[];
+        isPositionTpsl: boolean;
+        reduceOnly: boolean;
+        orderType: string;
+        origSz: string;
+        tif: string;
+        cloid: string | null;
+    };
+    status: 'filled' | 'open' | 'canceled' | 'triggered' | 'rejected' | 'marginCanceled';
+    statusTimestamp: number;
+}
+export interface TwapSliceFill {
+    fill: {
+        closedPnl: string;
+        coin: string;
+        crossed: boolean;
+        dir: string;
+        hash: string;
+        oid: number;
+        px: string;
+        side: string;
+        startPosition: string;
+        sz: string;
+        time: number;
+        fee: string;
+        feeToken: string;
+        tid: number;
+    };
+    twapId: number;
+}
+export interface ApproveAgentRequest {
+    agentAddress: string;
+    agentName?: string;
+}
+export interface ApproveBuilderFeeRequest {
+    maxFeeRate: string;
+    builder: string;
+}
+export interface Delegation {
+    validator: string;
+    amount: string;
+    lockedUntilTimestamp: number;
+}
+export interface DelegatorSummary {
+    delegated: string;
+    undelegated: string;
+    totalPendingWithdrawal: string;
+    nPendingWithdrawals: number;
+}
+export interface DelegatorHistoryEntry {
+    time: number;
+    hash: string;
+    delta: {
+        delegate: {
+            validator: string;
+            amount: string;
+            isUndelegate: boolean;
+        };
+    };
+}
+export interface DelegatorReward {
+    time: number;
+    source: string;
+    totalAmount: string;
+}
+export type PerpsAtOpenInterestCap = string[];
+export type UserRole = "missing" | "user" | "agent" | "vault" | "subAccount";
+export interface WsActiveAssetCtx {
+    coin: string;
+    ctx: {
+        dayNtlVlm: string;
+        prevDayPx: string;
+        markPx: string;
+        midPx?: string;
+        funding?: number;
+        openInterest?: number;
+        oraclePx?: number;
+        circulatingSupply?: number;
+    };
+}
+export interface WsActiveSpotAssetCtx {
+    coin: string;
+    ctx: {
+        dayNtlVlm: string;
+        prevDayPx: string;
+        markPx: string;
+        midPx?: string;
+        circulatingSupply: string;
+    };
+}
+export interface WsTwapState {
+    coin: string;
+    user: string;
+    side: string;
+    sz: number;
+    executedSz: number;
+    executedNtl: number;
+    minutes: number;
+    reduceOnly: boolean;
+    randomize: boolean;
+    timestamp: number;
+}
+export type WsTwapStatus = "activated" | "terminated" | "finished" | "error";
+export interface WsTwapHistory {
+    state: WsTwapState;
+    status: {
+        status: WsTwapStatus;
+        description: string;
+    };
+    time: number;
+}
+export interface WsTwapHistoryResponse {
+    isSnapshot: boolean;
+    user: string;
+    history: WsTwapHistory[];
+}
+export interface WsTwapSliceFill {
+    isSnapshot?: boolean;
+    user: string;
+    twapSliceFills: Array<{
+        fill: {
+            closedPnl: string;
+            coin: string;
+            crossed: boolean;
+            dir: string;
+            hash: string;
+            oid: number;
+            px: string;
+            side: string;
+            startPosition: string;
+            sz: string;
+            time: number;
+            fee: string;
+            feeToken: string;
+            tid: number;
+        };
+        twapId: number;
+    }>;
+}
+export interface ValidatorStats {
+    uptimeFraction: string;
+    predictedApr: string;
+    nSamples: number;
+}
+export interface ValidatorSummary {
+    validator: string;
+    signer: string;
+    name: string;
+    description: string;
+    nRecentBlocks: number;
+    stake: number;
+    isJailed: boolean;
+    unjailableAfter: number | null;
+    isActive: boolean;
+    commission: string;
+    stats: [
+        [
+            "day",
+            ValidatorStats
+        ],
+        [
+            "week",
+            ValidatorStats
+        ],
+        [
+            "month",
+            ValidatorStats
+        ]
+    ];
+}
+export interface VaultRelationship {
+    type: "normal" | "child" | "parent";
+    data?: {
+        childAddresses: string[];
+    };
+}
+export interface VaultSummary {
+    name: string;
+    vaultAddress: string;
+    leader: string;
+    tvl: string;
+    isClosed: boolean;
+    relationship: VaultRelationship;
+    createTimeMillis: number;
+}
+export interface TxDetails {
+    action: {
+        type: string;
+        [key: string]: unknown;
+    };
+    block: number;
+    error: string | null;
+    hash: string;
+    time: number;
+    user: string;
+}
+export interface BlockDetails {
+    blockTime: number;
+    hash: string;
+    height: number;
+    numTxs: number;
+    proposer: string;
+    txs: TxDetails[];
+}
+export interface BlockDetailsResponse {
+    type: "blockDetails";
+    blockDetails: BlockDetails;
+}
+export interface TxDetailsResponse {
+    type: "txDetails";
+    tx: TxDetails;
+}
+export interface UserDetailsResponse {
+    type: "userDetails";
+    txs: TxDetails[];
+}
+export interface UserFees {
+    dailyUserVlm: {
+        date: string;
+        userCross: string;
+        userAdd: string;
+        exchange: string;
+    }[];
+    feeSchedule: {
+        cross: string;
+        add: string;
+        tiers: {
+            vip: {
+                ntlCutoff: string;
+                cross: string;
+                add: string;
+            }[];
+            mm: {
+                makerFractionCutoff: string;
+                add: string;
+            }[];
+        };
+        referralDiscount: string;
+    };
+    userCrossRate: string;
+    userAddRate: string;
+    activeReferralDiscount: string;
+    trial: unknown | null;
+    feeTrialReward: string;
+    nextTrialAvailableTimestamp: unknown | null;
+}

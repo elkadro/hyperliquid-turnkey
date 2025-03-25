@@ -34,6 +34,7 @@ class SymbolConversion {
         this.refreshInterval = null;
         this.perpMeta = [];
         this.spotMeta = [];
+        this.initialized = false;
         this.perpMeta = _perpMeta;
         this.spotMeta = _spotMeta;
         this.httpApi = new helpers_1.HttpApi(baseURL, CONSTANTS.ENDPOINTS.INFO, rateLimiter, _proxy);
@@ -42,6 +43,12 @@ class SymbolConversion {
     async initialize() {
         await this.refreshAssetMaps();
         this.startPeriodicRefresh();
+        this.initialized = true;
+    }
+    ensureInitialized() {
+        if (!this.initialized) {
+            throw new Error('SymbolConversion must be initialized before use. Call initialize() first.');
+        }
     }
     async refreshAssetMaps() {
         try {
@@ -89,9 +96,6 @@ class SymbolConversion {
             clearInterval(this.refreshInterval);
             this.refreshInterval = null;
         }
-    }
-    async ensureInitialized() {
-        await this.initializationPromise;
     }
     async getInternalName(exchangeName) {
         await this.ensureInitialized();

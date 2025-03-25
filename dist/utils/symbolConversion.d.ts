@@ -7,12 +7,13 @@ export declare class SymbolConversion {
     private initializationPromise;
     private perpMeta;
     private spotMeta;
+    private initialized;
     constructor(baseURL: string, rateLimiter: any, _perpMeta: any, _spotMeta: any, _proxy?: string);
     private initialize;
+    private ensureInitialized;
     private refreshAssetMaps;
     private startPeriodicRefresh;
     stopPeriodicRefresh(): void;
-    private ensureInitialized;
     getInternalName(exchangeName: string): Promise<string | undefined>;
     getExchangeName(internalName: string): Promise<string | undefined>;
     getAssetIndex(assetSymbol: string): Promise<number | undefined>;

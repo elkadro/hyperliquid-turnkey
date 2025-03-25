@@ -34,6 +34,13 @@ var InfoType;
     InfoType["SPOT_CLEARINGHOUSE_STATE"] = "spotClearinghouseState";
     InfoType["SPOT_META_AND_ASSET_CTXS"] = "spotMetaAndAssetCtxs";
     InfoType["USER_FEES"] = "userFees";
+    InfoType["VAULT_DETAILS"] = "vaultDetails";
+    InfoType["USER_VAULT_EQUITIES"] = "userVaultEquities";
+    InfoType["VAULT_SUMMARIES"] = "vaultSummaries";
+    InfoType["BLOCK_DETAILS"] = "blockDetails";
+    InfoType["TX_DETAILS"] = "txDetails";
+    InfoType["USER_DETAILS"] = "userDetails";
+    InfoType["SUB_ACCOUNTS"] = "subAccounts";
 })(InfoType || (exports.InfoType = InfoType = {}));
 var ExchangeType;
 (function (ExchangeType) {
@@ -51,6 +58,9 @@ var ExchangeType;
     ExchangeType["SPOT_USER"] = "spotUser";
     ExchangeType["VAULT_TRANSFER"] = "vaultTransfer";
     ExchangeType["SET_REFERRER"] = "setReferrer";
+    ExchangeType["CREATE_VAULT"] = "createVault";
+    ExchangeType["VAULT_DISTRIBUTE"] = "vaultDistribute";
+    ExchangeType["VAULT_MODIFY"] = "vaultModify";
 })(ExchangeType || (exports.ExchangeType = ExchangeType = {}));
 exports.WEBSOCKET = {
     MAINNET_URL: 'wss://api.hyperliquid.xyz/ws',
