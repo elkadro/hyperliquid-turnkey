@@ -14,6 +14,10 @@ import {
 import * as CONSTANTS from '../types/constants';
 
 import {
+  CreateVaultRequest,
+  CreateVaultResponse,
+  VaultDistributeRequest,
+  VaultModifyRequest,
   CancelOrderRequest,
   OrderRequest
 } from '../types/index';
@@ -21,6 +25,7 @@ import {
 import { ExchangeType, ENDPOINTS } from '../types/constants';
 import { SymbolConversion } from '../utils/symbolConversion';
 import { floatToWire } from '../utils/signing';
+import { Hyperliquid } from '../index';
 
 
 // const IS_MAINNET = true; // Make sure this matches the IS_MAINNET in signing.ts
@@ -32,6 +37,11 @@ export class ExchangeAPI {
   private IS_MAINNET = true;
   private walletAddress: string | null;
   private turnkeySignerAddress: string = "";
+  private parent: Hyperliquid;
+  private vaultAddress: string | null;  
+  // Properties for unique nonce generation
+  private nonceCounter = 0;
+  private lastNonceTimestamp = 0;
 
   constructor(
     testnet: boolean,
@@ -40,7 +50,9 @@ export class ExchangeAPI {
     rateLimiter: RateLimiter,
     symbolConversion: SymbolConversion,
     walletAddress: string | null = null,
-    _proxy?: string
+    parent: Hyperliquid,
+    vaultAddress: string | null = null,
+    _proxy?: string | undefined
   ) {
     const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
     this.IS_MAINNET = !testnet;
@@ -48,6 +60,8 @@ export class ExchangeAPI {
     this.turnkeySigner = turnkeySigner;
     this.symbolConversion = symbolConversion;
     this.walletAddress = walletAddress;
+    this.parent = parent;
+    this.vaultAddress = vaultAddress;
     (async () => {
       this.turnkeySignerAddress = await turnkeySigner.getAddress();
     })();
@@ -70,7 +84,7 @@ export class ExchangeAPI {
       console.log("Hyperliquid sdk: place order turnkey signer class address: ", await this.turnkeySignerAddress);
       const orderWire = orderRequestToOrderWire(orderRequest, assetIndex);
       const action = orderWiresToOrderAction([orderWire]);
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -97,7 +111,7 @@ export class ExchangeAPI {
         cancels: cancelsWithIndices.map(({ a, o }) => ({ a, o }))
       };
       
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
   
       const payload = { action, nonce, signature };
@@ -115,7 +129,7 @@ export class ExchangeAPI {
         type: ExchangeType.CANCEL_BY_CLOID,
         cancels: [{ asset: assetIndex, cloid }]
       };
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -136,7 +150,7 @@ export class ExchangeAPI {
         oid,
         order: orderWire
       };
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -165,7 +179,7 @@ export class ExchangeAPI {
         })
       };
   
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
   
       const payload = { action, nonce, signature };
@@ -185,7 +199,7 @@ export class ExchangeAPI {
         isCross: leverageMode === "cross",
         leverage: leverage
       };
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -205,7 +219,7 @@ export class ExchangeAPI {
         isBuy,
         ntli
       };
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -297,7 +311,7 @@ export class ExchangeAPI {
           toPerp: toPerp
         }
       };
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -311,7 +325,7 @@ export class ExchangeAPI {
   async scheduleCancel(time: number | null): Promise<any> {
     try {
       const action = { type: ExchangeType.SCHEDULE_CANCEL, time };
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -330,7 +344,7 @@ export class ExchangeAPI {
         isDeposit,
         usd
       };
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -346,7 +360,7 @@ export class ExchangeAPI {
         type: ExchangeType.SET_REFERRER,
         code
       };
-      const nonce = Date.now();
+      const nonce = this.generateUniqueNonce();
       const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };
@@ -354,5 +368,82 @@ export class ExchangeAPI {
     } catch (error) {
       throw error;
     }
+  }
+  async createVault(name: string, description: string, initialUsd: number): Promise<CreateVaultResponse> {
+    await this.parent.ensureInitialized();
+    try {
+      const action = {
+        type: ExchangeType.CREATE_VAULT,
+        name,
+        description,
+        initialUsd
+      };
+      const nonce = this.generateUniqueNonce();
+      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+
+      const payload = { action, nonce, signature };
+      return this.httpApi.makeRequest(payload, 1);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Distribute funds from a vault between followers
+  async vaultDistribute(vaultAddress: string, usd: number): Promise<any> {
+    await this.parent.ensureInitialized();
+    try {
+      const action = {
+        type: ExchangeType.VAULT_DISTRIBUTE,
+        vaultAddress,
+        usd
+      };
+      const nonce = this.generateUniqueNonce();
+      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+
+      const payload = { action, nonce, signature };
+      return this.httpApi.makeRequest(payload, 1);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Modify a vault's configuration
+  async vaultModify(vaultAddress: string, allowDeposits: boolean | null, alwaysCloseOnWithdraw: boolean | null): Promise<any> {
+    await this.parent.ensureInitialized();
+    try {
+      const action = {
+        type: ExchangeType.VAULT_MODIFY,
+        vaultAddress,
+        allowDeposits,
+        alwaysCloseOnWithdraw
+      };
+      const nonce = this.generateUniqueNonce();
+      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+
+      const payload = { action, nonce, signature };
+      return this.httpApi.makeRequest(payload, 1);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Generates a unique nonce by using the current timestamp in milliseconds
+   * If multiple calls happen in the same millisecond, it ensures the nonce is still increasing
+   * @returns A unique nonce value
+   */
+  private generateUniqueNonce(): number {
+    const timestamp = Date.now();
+    
+    // Ensure the nonce is always greater than the previous one
+    if (timestamp <= this.lastNonceTimestamp) {
+      // If we're in the same millisecond, increment by 1 from the last nonce
+      this.lastNonceTimestamp += 1;
+      return this.lastNonceTimestamp;
+    }
+    
+    // Otherwise use the current timestamp
+    this.lastNonceTimestamp = timestamp;
+    return timestamp;
   }
 }

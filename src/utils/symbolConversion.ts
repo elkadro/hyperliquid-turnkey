@@ -10,6 +10,7 @@ export class SymbolConversion {
     private initializationPromise: Promise<void>;
     private perpMeta: any = [];
     private spotMeta: any = [];
+    private initialized: boolean = false;
 
     constructor(baseURL: string, rateLimiter: any, _perpMeta: any, _spotMeta: any, _proxy?: string) {
         this.perpMeta = _perpMeta;
@@ -21,6 +22,13 @@ export class SymbolConversion {
     private async initialize(): Promise<void> {
         await this.refreshAssetMaps();
         this.startPeriodicRefresh();
+        this.initialized = true;
+    }
+
+    private ensureInitialized(): void {
+        if (!this.initialized) {
+            throw new Error('SymbolConversion must be initialized before use. Call initialize() first.');
+        }
     }
 
     private async refreshAssetMaps(): Promise<void> {
@@ -73,10 +81,6 @@ export class SymbolConversion {
             clearInterval(this.refreshInterval);
             this.refreshInterval = null;
         }
-    }
-
-    private async ensureInitialized(): Promise<void> {
-        await this.initializationPromise;
     }
 
     public async getInternalName(exchangeName: string): Promise<string | undefined> {
