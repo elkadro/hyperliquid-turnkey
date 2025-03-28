@@ -38,7 +38,7 @@ export class ExchangeAPI {
   private walletAddress: string | null;
   private turnkeySignerAddress: string = "";
   private parent: Hyperliquid;
-  private vaultAddress: string | null;  
+  private vaultAddress: string | null;
   // Properties for unique nonce generation
   private nonceCounter = 0;
   private lastNonceTimestamp = 0;
@@ -78,13 +78,14 @@ export class ExchangeAPI {
   async placeOrder(orderRequest: OrderRequest): Promise<any> {
     try {
       const assetIndex = await this.getAssetIndex(orderRequest.coin);
-      
+
       console.log("Hyperliquid sdk: place order turnkey signer inner address: ", await this.turnkeySigner.getAddress());
       
       console.log("Hyperliquid sdk: place order turnkey signer class address: ", await this.turnkeySignerAddress);
       const orderWire = orderRequestToOrderWire(orderRequest, assetIndex);
       const action = orderWiresToOrderAction([orderWire]);
       const nonce = this.generateUniqueNonce();
+      console.log("Vault address: ", orderRequest.vaultAddress);
       const signature = await signL1Action(this.turnkeySigner, action, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
 
       const payload = { action, nonce, signature };

@@ -64,6 +64,7 @@ class ExchangeAPI {
             const orderWire = (0, signing_1.orderRequestToOrderWire)(orderRequest, assetIndex);
             const action = (0, signing_1.orderWiresToOrderAction)([orderWire]);
             const nonce = this.generateUniqueNonce();
+            console.log("Vault address: ", orderRequest.vaultAddress);
             const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
             const payload = { action, nonce, signature };
             return this.httpApi.makeRequest(payload, 1);

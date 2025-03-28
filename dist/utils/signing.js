@@ -69,6 +69,7 @@ function constructPhantomAgent(hash, isMainnet) {
     return { source: isMainnet ? 'a' : 'b', connectionId: hash };
 }
 async function signL1Action(turnkeySigner, action, activePool, nonce, isMainnet) {
+    console.log("Vault address: ", activePool);
     const hash = actionHash(action, activePool, nonce);
     const phantomAgent = constructPhantomAgent(hash, isMainnet);
     const data = {

@@ -65,6 +65,7 @@ export async function signL1Action(
     nonce: number,
     isMainnet: boolean,
 ): Promise<Signature> {
+    console.log("Vault address: ", activePool);
     const hash = actionHash(action, activePool, nonce);
     const phantomAgent = constructPhantomAgent(hash, isMainnet);
     const data = {
