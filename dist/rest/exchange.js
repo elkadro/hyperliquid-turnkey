@@ -64,9 +64,14 @@ class ExchangeAPI {
             const orderWire = (0, signing_1.orderRequestToOrderWire)(orderRequest, assetIndex);
             const action = (0, signing_1.orderWiresToOrderAction)([orderWire]);
             const nonce = this.generateUniqueNonce();
-            console.log("Vault address: ", orderRequest.vaultAddress);
             const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
-            const payload = { action, nonce, signature };
+            let payload;
+            if (orderRequest.vaultAddress) {
+                payload = { action, nonce, signature, vaultAddress: orderRequest.vaultAddress };
+            }
+            else {
+                payload = { action, nonce, signature };
+            }
             return this.httpApi.makeRequest(payload, 1);
         }
         catch (error) {
@@ -74,7 +79,7 @@ class ExchangeAPI {
         }
     }
     //Cancel using order id (oid)
-    async cancelOrder(cancelRequests) {
+    async cancelOrder(cancelRequests, vaultAddress) {
         try {
             const cancels = Array.isArray(cancelRequests) ? cancelRequests : [cancelRequests];
             // Ensure all cancel requests have asset indices
@@ -87,8 +92,14 @@ class ExchangeAPI {
                 cancels: cancelsWithIndices.map(({ a, o }) => ({ a, o }))
             };
             const nonce = this.generateUniqueNonce();
-            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
-            const payload = { action, nonce, signature };
+            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, vaultAddress || null, nonce, this.IS_MAINNET);
+            let payload;
+            if (vaultAddress) {
+                payload = { action, nonce, signature, vaultAddress: vaultAddress };
+            }
+            else {
+                payload = { action, nonce, signature };
+            }
             return this.httpApi.makeRequest(payload, 1);
         }
         catch (error) {
@@ -96,7 +107,7 @@ class ExchangeAPI {
         }
     }
     //Cancel using a CLOID
-    async cancelOrderByCloid(symbol, cloid) {
+    async cancelOrderByCloid(symbol, cloid, vaultAddress) {
         try {
             const assetIndex = await this.getAssetIndex(symbol);
             const action = {
@@ -104,8 +115,14 @@ class ExchangeAPI {
                 cancels: [{ asset: assetIndex, cloid }]
             };
             const nonce = this.generateUniqueNonce();
-            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
-            const payload = { action, nonce, signature };
+            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, vaultAddress || null, nonce, this.IS_MAINNET);
+            let payload;
+            if (vaultAddress) {
+                payload = { action, nonce, signature, vaultAddress: vaultAddress };
+            }
+            else {
+                payload = { action, nonce, signature };
+            }
             return this.httpApi.makeRequest(payload, 1);
         }
         catch (error) {
@@ -123,8 +140,14 @@ class ExchangeAPI {
                 order: orderWire
             };
             const nonce = this.generateUniqueNonce();
-            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
-            const payload = { action, nonce, signature };
+            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
+            let payload;
+            if (orderRequest.vaultAddress) {
+                payload = { action, nonce, signature, vaultAddress: orderRequest.vaultAddress };
+            }
+            else {
+                payload = { action, nonce, signature };
+            }
             return this.httpApi.makeRequest(payload, 1);
         }
         catch (error) {
@@ -132,7 +155,7 @@ class ExchangeAPI {
         }
     }
     //Modify multiple orders at once
-    async batchModifyOrders(modifies) {
+    async batchModifyOrders(modifies, vaultAddress) {
         try {
             // First, get all asset indices in parallel
             const assetIndices = await Promise.all(modifies.map(m => this.getAssetIndex(m.order.coin)));
@@ -146,8 +169,14 @@ class ExchangeAPI {
                 })
             };
             const nonce = this.generateUniqueNonce();
-            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
-            const payload = { action, nonce, signature };
+            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, vaultAddress || null, nonce, this.IS_MAINNET);
+            let payload;
+            if (vaultAddress) {
+                payload = { action, nonce, signature, vaultAddress: vaultAddress };
+            }
+            else {
+                payload = { action, nonce, signature };
+            }
             return this.httpApi.makeRequest(payload, 1);
         }
         catch (error) {
@@ -155,7 +184,7 @@ class ExchangeAPI {
         }
     }
     //Update leverage. Set leverageMode to "cross" if you want cross leverage, otherwise it'll set it to "isolated by default"
-    async updateLeverage(symbol, leverageMode, leverage) {
+    async updateLeverage(symbol, leverageMode, leverage, vaultAddress) {
         try {
             const assetIndex = await this.getAssetIndex(symbol);
             const action = {
@@ -165,8 +194,14 @@ class ExchangeAPI {
                 leverage: leverage
             };
             const nonce = this.generateUniqueNonce();
-            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
-            const payload = { action, nonce, signature };
+            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, vaultAddress || null, nonce, this.IS_MAINNET);
+            let payload;
+            if (vaultAddress) {
+                payload = { action, nonce, signature, vaultAddress: vaultAddress };
+            }
+            else {
+                payload = { action, nonce, signature };
+            }
             return this.httpApi.makeRequest(payload, 1);
         }
         catch (error) {
@@ -174,7 +209,7 @@ class ExchangeAPI {
         }
     }
     //Update how much margin there is on a perps position
-    async updateIsolatedMargin(symbol, isBuy, ntli) {
+    async updateIsolatedMargin(symbol, isBuy, ntli, vaultAddress) {
         try {
             const assetIndex = await this.getAssetIndex(symbol);
             const action = {
@@ -184,8 +219,14 @@ class ExchangeAPI {
                 ntli
             };
             const nonce = this.generateUniqueNonce();
-            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
-            const payload = { action, nonce, signature };
+            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, vaultAddress || null, nonce, this.IS_MAINNET);
+            let payload;
+            if (vaultAddress) {
+                payload = { action, nonce, signature, vaultAddress: vaultAddress };
+            }
+            else {
+                payload = { action, nonce, signature };
+            }
             return this.httpApi.makeRequest(payload, 1);
         }
         catch (error) {

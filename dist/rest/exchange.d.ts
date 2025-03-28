@@ -19,15 +19,15 @@ export declare class ExchangeAPI {
     constructor(testnet: boolean, turnkeySigner: any, info: InfoAPI, rateLimiter: RateLimiter, symbolConversion: SymbolConversion, walletAddress: (string | null) | undefined, parent: Hyperliquid, vaultAddress?: string | null, _proxy?: string | undefined);
     private getAssetIndex;
     placeOrder(orderRequest: OrderRequest): Promise<any>;
-    cancelOrder(cancelRequests: CancelOrderRequest | CancelOrderRequest[]): Promise<CancelOrderResponse>;
-    cancelOrderByCloid(symbol: string, cloid: string): Promise<any>;
+    cancelOrder(cancelRequests: CancelOrderRequest | CancelOrderRequest[], vaultAddress?: string): Promise<CancelOrderResponse>;
+    cancelOrderByCloid(symbol: string, cloid: string, vaultAddress?: string): Promise<any>;
     modifyOrder(oid: number, orderRequest: OrderRequest): Promise<any>;
     batchModifyOrders(modifies: Array<{
         oid: number;
         order: OrderRequest;
-    }>): Promise<any>;
-    updateLeverage(symbol: string, leverageMode: string, leverage: number): Promise<any>;
-    updateIsolatedMargin(symbol: string, isBuy: boolean, ntli: number): Promise<any>;
+    }>, vaultAddress?: string): Promise<any>;
+    updateLeverage(symbol: string, leverageMode: string, leverage: number, vaultAddress?: string): Promise<any>;
+    updateIsolatedMargin(symbol: string, isBuy: boolean, ntli: number, vaultAddress?: string): Promise<any>;
     usdTransfer(destination: string, amount: number): Promise<any>;
     spotTransfer(destination: string, token: string, amount: string): Promise<any>;
     initiateWithdrawal(destination: string, amount: number): Promise<any>;

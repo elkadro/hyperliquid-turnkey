@@ -105,10 +105,10 @@ class Hyperliquid {
         return this.isValidPrivateKey;
     }
     async connect() {
-        await this.ws.connect();
-        if (!this.isValidPrivateKey) {
-            console.warn("Not authenticated. Some WebSocket functionalities may be limited.");
-        }
+        // await this.ws.connect();
+        // if (!this.isValidPrivateKey) {
+        //   console.warn("Not authenticated. Some WebSocket functionalities may be limited.");
+        // }
         if (!this._initialized) {
             if (!this._initializing) {
                 this._initializing = this.initializeWithTurnkey(this._turnkeySigner, this._testnet);
