@@ -32,10 +32,13 @@ export class Hyperliquid {
   private _walletAddress?: string;
   private vaultAddress?: string | null = null;
 
-  constructor(turnkeySigner: any | null = null, testnet: boolean = false, walletAddress: string, _prepMeta: any, _spotMeta: any, _proxy?: string) {
+  constructor(turnkeySigner: any | null = null, testnet: boolean = false, walletAddress: string, _prepMeta: any, _spotMeta: any, _proxy?: string, _vaultAddress?: string) {
     const baseURL = testnet ? CONSTANTS.BASE_URLS.TESTNET : CONSTANTS.BASE_URLS.PRODUCTION;
     if (_proxy && _proxy.length > 0) {
       this.proxy = _proxy
+    }
+    if (_vaultAddress && _vaultAddress.length > 0) {
+      this.vaultAddress = _vaultAddress
     }
     this.rateLimiter = new RateLimiter();
     this.symbolConversion = new SymbolConversion(baseURL, this.rateLimiter, _prepMeta, _spotMeta,_proxy);
