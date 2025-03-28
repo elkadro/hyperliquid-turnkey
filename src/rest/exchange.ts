@@ -67,6 +67,10 @@ export class ExchangeAPI {
     })();
   }
 
+  private getVaultAddress(): string | null {
+    return this.vaultAddress || null;
+  }
+
   private async getAssetIndex(symbol: string): Promise<number> {
     const index = await this.symbolConversion.getAssetIndex(symbol);
     if (index === undefined) {
@@ -78,17 +82,16 @@ export class ExchangeAPI {
   async placeOrder(orderRequest: OrderRequest): Promise<any> {
     try {
       const assetIndex = await this.getAssetIndex(orderRequest.coin);
-
-      console.log("Hyperliquid sdk: place order turnkey signer inner address: ", await this.turnkeySigner.getAddress());
+      const vaultAddress = this.getVaultAddress();
       
+      console.log("Hyperliquid sdk: place order turnkey signer inner address: ", await this.turnkeySigner.getAddress());
       console.log("Hyperliquid sdk: place order turnkey signer class address: ", await this.turnkeySignerAddress);
       const orderWire = orderRequestToOrderWire(orderRequest, assetIndex);
       const action = orderWiresToOrderAction([orderWire]);
       const nonce = this.generateUniqueNonce();
-      console.log("Vault address: ", orderRequest.vaultAddress);
-      const signature = await signL1Action(this.turnkeySigner, action, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
+      const signature = await signL1Action(this.turnkeySigner, action, vaultAddress, nonce, this.IS_MAINNET);
 
-      const payload = { action, nonce, signature };
+      const payload = { action, nonce, signature, vaultAddress };
     
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
@@ -100,6 +103,7 @@ export class ExchangeAPI {
   async cancelOrder(cancelRequests: CancelOrderRequest | CancelOrderRequest[]): Promise<CancelOrderResponse> {
     try {
       const cancels = Array.isArray(cancelRequests) ? cancelRequests : [cancelRequests];
+      const vaultAddress = this.getVaultAddress();
       
       // Ensure all cancel requests have asset indices
       const cancelsWithIndices = await Promise.all(cancels.map(async (req) => ({
@@ -113,9 +117,9 @@ export class ExchangeAPI {
       };
       
       const nonce = this.generateUniqueNonce();
-      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+      const signature = await signL1Action(this.turnkeySigner, action, vaultAddress, nonce, this.IS_MAINNET);
   
-      const payload = { action, nonce, signature };
+      const payload = { action, nonce, signature, vaultAddress };
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
@@ -126,14 +130,15 @@ export class ExchangeAPI {
   async cancelOrderByCloid(symbol: string, cloid: string): Promise<any> {
     try {
       const assetIndex = await this.getAssetIndex(symbol);
+      const vaultAddress = this.getVaultAddress();
       const action = {
         type: ExchangeType.CANCEL_BY_CLOID,
         cancels: [{ asset: assetIndex, cloid }]
       };
       const nonce = this.generateUniqueNonce();
-      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+      const signature = await signL1Action(this.turnkeySigner, action, vaultAddress, nonce, this.IS_MAINNET);
 
-      const payload = { action, nonce, signature };
+      const payload = { action, nonce, signature, vaultAddress };
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
@@ -144,6 +149,7 @@ export class ExchangeAPI {
   async modifyOrder(oid: number, orderRequest: OrderRequest): Promise<any> {
     try {
       const assetIndex = await this.getAssetIndex(orderRequest.coin);
+      const vaultAddress = this.getVaultAddress();
 
       const orderWire = orderRequestToOrderWire(orderRequest, assetIndex);
       const action = {
@@ -152,9 +158,9 @@ export class ExchangeAPI {
         order: orderWire
       };
       const nonce = this.generateUniqueNonce();
-      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+      const signature = await signL1Action(this.turnkeySigner, action, vaultAddress, nonce, this.IS_MAINNET);
 
-      const payload = { action, nonce, signature };
+      const payload = { action, nonce, signature, vaultAddress };
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
@@ -164,6 +170,7 @@ export class ExchangeAPI {
   //Modify multiple orders at once
   async batchModifyOrders(modifies: Array<{ oid: number, order: OrderRequest }>): Promise<any> {
     try {
+      const vaultAddress = this.getVaultAddress();
       // First, get all asset indices in parallel
       const assetIndices = await Promise.all(
         modifies.map(m => this.getAssetIndex(m.order.coin))
@@ -181,9 +188,9 @@ export class ExchangeAPI {
       };
   
       const nonce = this.generateUniqueNonce();
-      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+      const signature = await signL1Action(this.turnkeySigner, action, vaultAddress, nonce, this.IS_MAINNET);
   
-      const payload = { action, nonce, signature };
+      const payload = { action, nonce, signature, vaultAddress };
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
@@ -193,6 +200,7 @@ export class ExchangeAPI {
   //Update leverage. Set leverageMode to "cross" if you want cross leverage, otherwise it'll set it to "isolated by default"
   async updateLeverage(symbol: string, leverageMode: string, leverage: number): Promise<any> {
     try {
+      const vaultAddress = this.getVaultAddress();
       const assetIndex = await this.getAssetIndex(symbol);
       const action = {
         type: ExchangeType.UPDATE_LEVERAGE,
@@ -201,9 +209,9 @@ export class ExchangeAPI {
         leverage: leverage
       };
       const nonce = this.generateUniqueNonce();
-      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+      const signature = await signL1Action(this.turnkeySigner, action, vaultAddress, nonce, this.IS_MAINNET);
 
-      const payload = { action, nonce, signature };
+      const payload = { action, nonce, signature, vaultAddress };
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
@@ -213,6 +221,7 @@ export class ExchangeAPI {
   //Update how much margin there is on a perps position
   async updateIsolatedMargin(symbol: string, isBuy: boolean, ntli: number): Promise<any> {
     try {
+      const vaultAddress = this.getVaultAddress();
       const assetIndex = await this.getAssetIndex(symbol);
       const action = {
         type: ExchangeType.UPDATE_ISOLATED_MARGIN,
@@ -221,9 +230,9 @@ export class ExchangeAPI {
         ntli
       };
       const nonce = this.generateUniqueNonce();
-      const signature = await signL1Action(this.turnkeySigner, action, null, nonce, this.IS_MAINNET);
+      const signature = await signL1Action(this.turnkeySigner, action, vaultAddress, nonce, this.IS_MAINNET);
 
-      const payload = { action, nonce, signature };
+      const payload = { action, nonce, signature, vaultAddress };
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
