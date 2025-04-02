@@ -7,6 +7,31 @@ export type OrderType = { limit?: LimitOrderType; trigger?: TriggerOrderTypeWire
 export type Cloid = string;
 export type OidOrCloid = number | Cloid;
 
+export interface Builder {
+    address: string;
+    fee: number;
+}
+
+interface BaseOrder {
+    vaultAddress?: string;
+    grouping?: Grouping;
+    builder?: Builder;
+}
+
+export interface Order extends BaseOrder {
+    orders?: undefined;
+    coin: string;
+    is_buy: boolean;
+    sz: number | string;
+    limit_px: number | string;
+    order_type: OrderType;
+    reduce_only: boolean;
+    cloid?: Cloid;
+}
+
+interface MultiOrder extends BaseOrder {
+    orders: Order[];
+}
 
 export interface AllMids {
     [coin: string]: string;
@@ -352,6 +377,8 @@ export interface OrderRequest {
     reduce_only: boolean;
     cloid?: Cloid;
     vaultAddress?: string;
+    grouping?: Grouping;
+    builder?: Builder;
 }
 
 export interface OrderWire {

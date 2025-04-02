@@ -166,6 +166,8 @@ function orderRequestToOrderWire(order, asset) {
         r: order.reduce_only,
         t: orderTypeToWire(order.order_type),
     };
+    console.log("Order wire: ");
+    console.log(orderWire);
     if (order.cloid !== undefined) {
         orderWire.c = order.cloid;
     }

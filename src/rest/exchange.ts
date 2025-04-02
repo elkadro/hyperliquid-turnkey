@@ -10,6 +10,9 @@ import {
   signUserSignedAction,
   signUsdTransferAction,
   signWithdrawFromBridgeAction,
+  removeTrailingZeros,
+  orderToWire,
+  orderWireToAction,
 } from '../utils/signing';
 import * as CONSTANTS from '../types/constants';
 
@@ -19,7 +22,8 @@ import {
   VaultDistributeRequest,
   VaultModifyRequest,
   CancelOrderRequest,
-  OrderRequest
+  OrderRequest,
+  Order
 } from '../types/index';
 
 import { ExchangeType, ENDPOINTS } from '../types/constants';
@@ -75,23 +79,59 @@ export class ExchangeAPI {
       return index;
   }
 
-  async placeOrder(orderRequest: OrderRequest): Promise<any> {
+  async placeOrder(orderRequest: OrderRequest | Order): Promise<any> {
+    const grouping = (orderRequest as any).grouping || "na";
+    let builder = (orderRequest as any).builder;
+    
+    // Normalize builder address to lowercase if it exists
+    if (builder) {
+      builder = {
+        ...builder,
+        address: builder.address?.toLowerCase() || builder.b?.toLowerCase()
+      };
+    }
+    
+    const ordersArray = (orderRequest as Order).orders ?? [orderRequest as OrderRequest];
     try {
-      const assetIndex = await this.getAssetIndex(orderRequest.coin);
+      const assetIndexCache = new Map<string, number>();
+      // const assetIndex = await this.getAssetIndex(orderRequest.coin);
+      // Normalize price and size values to remove trailing zeros
+      const normalizedOrders = ordersArray.map((order: Order) => {
+        const normalizedOrder = { ...order };
+        
+        // Handle price normalization
+        if (typeof normalizedOrder.limit_px === 'string') {
+          normalizedOrder.limit_px = removeTrailingZeros(normalizedOrder.limit_px);
+        }
+        
+        // Handle size normalization
+        if (typeof normalizedOrder.sz === 'string') {
+          normalizedOrder.sz = removeTrailingZeros(normalizedOrder.sz);
+        }
+        
+        return normalizedOrder;
+      });
 
-      console.log("Hyperliquid sdk: place order turnkey signer inner address: ", await this.turnkeySigner.getAddress());
-      
-      console.log("Hyperliquid sdk: place order turnkey signer class address: ", await this.turnkeySignerAddress);
-      const orderWire = orderRequestToOrderWire(orderRequest, assetIndex);
-      const action = orderWiresToOrderAction([orderWire]);
+      const orderWires = await Promise.all(
+        normalizedOrders.map(async (o: Order) => {
+          let assetIndex = assetIndexCache.get(o.coin);
+          if (assetIndex === undefined) {
+            assetIndex = await this.getAssetIndex(o.coin);
+            assetIndexCache.set(o.coin, assetIndex);
+          }
+          return orderToWire(o, assetIndex);
+        })
+      );
+
+      const actions = orderWireToAction(orderWires, grouping, builder);
       const nonce = this.generateUniqueNonce();
-      const signature = await signL1Action(this.turnkeySigner, action, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
+      const signature = await signL1Action(this.turnkeySigner, actions, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
       let payload;
       if(orderRequest.vaultAddress) {
-      payload = { action, nonce, signature, vaultAddress: orderRequest.vaultAddress };
+        payload = { action: actions, nonce, signature, vaultAddress: orderRequest.vaultAddress };
       }
       else {
-        payload = { action, nonce, signature };
+        payload = { action: actions, nonce, signature };
       }
     
       return this.httpApi.makeRequest(payload, 1);

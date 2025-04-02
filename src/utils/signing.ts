@@ -1,7 +1,7 @@
 import { encode } from '@msgpack/msgpack';
 import { ethers, getBytes, HDNodeWallet, keccak256, type Wallet } from 'ethers';
 
-import type { OrderType, Signature, OrderRequest, CancelOrderRequest, OrderWire } from '../types';
+import type { OrderType, Signature, OrderRequest, CancelOrderRequest, OrderWire, Order, Grouping, Builder } from '../types';
 
 const phantomDomain = {
     name: 'Exchange',
@@ -39,6 +39,7 @@ function addressToBytes(address: string): Uint8Array {
 function actionHash(action: unknown, vaultAddress: string | null, nonce: number): string {
     // Normalize the action to remove trailing zeros from price and size fields
     const normalizedAction = normalizeTrailingZeros(action);
+    
     const msgPackBytes = encode(normalizedAction);
     const additionalBytesLength = vaultAddress === null ? 9 : 29;
     const data = new Uint8Array(msgPackBytes.length + additionalBytesLength);
@@ -153,7 +154,7 @@ export async function signAgent(
 async function signInner(
     turnkeySigner: any, data: any): Promise<Signature> {
     console.log("Hyperliquid sdk: Signer Inner address: ", await turnkeySigner.getAddress());
-    const signature = await turnkeySigner.signTypedData(data);
+    const signature = await turnkeySigner.signTypedData(data.domain, data.types, data.message);
     return splitSig(signature);
 }
 
@@ -209,6 +210,34 @@ export function orderRequestToOrderWire(order: OrderRequest, asset: number): Ord
     return orderWire;
 }
 
+export function orderToWire(order: Order, asset: number): OrderWire {
+    const orderWire: OrderWire = {
+        a: asset,
+        b: order.is_buy,
+        p: typeof order.limit_px === 'string' ? removeTrailingZeros(order.limit_px) : floatToWire(order.limit_px),
+        s: typeof order.sz === 'string' ? removeTrailingZeros(order.sz) : floatToWire(order.sz),
+        r: order.reduce_only,
+        t: orderTypeToWire(order.order_type),
+    };
+    if (order.cloid !== undefined) {
+        orderWire.c = order.cloid;
+    }
+    return orderWire;
+}
+
+export function orderWireToAction(orders: OrderWire[], grouping: Grouping = "na", builder?: Builder): any {
+    return {
+        type: 'order',
+        orders: orders,
+        grouping: grouping,
+        ...(builder !== undefined ? { 
+            builder: {
+                b: builder.address.toLowerCase(),
+                f: builder.fee
+            } 
+        } : {})
+    };
+}
 export interface CancelOrderResponse {
     status: string;
     response: {
