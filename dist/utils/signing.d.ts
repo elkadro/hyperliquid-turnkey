@@ -1,4 +1,4 @@
-import type { OrderType, Signature, OrderRequest, CancelOrderRequest, OrderWire } from '../types';
+import type { OrderType, Signature, OrderRequest, CancelOrderRequest, OrderWire, Order, Grouping, Builder } from '../types';
 export declare function orderTypeToWire(orderType: OrderType): OrderType;
 export declare function signL1Action(turnkeySigner: any, action: unknown, activePool: string | null, nonce: number, isMainnet: boolean): Promise<Signature>;
 export declare function signUserSignedAction(turnkeySigner: any, action: any, payloadTypes: Array<{
@@ -13,6 +13,8 @@ export declare function floatToIntForHashing(x: number): number;
 export declare function floatToUsdInt(x: number): number;
 export declare function getTimestampMs(): number;
 export declare function orderRequestToOrderWire(order: OrderRequest, asset: number): OrderWire;
+export declare function orderToWire(order: Order, asset: number): OrderWire;
+export declare function orderWireToAction(orders: OrderWire[], grouping?: Grouping, builder?: Builder): any;
 export interface CancelOrderResponse {
     status: string;
     response: {

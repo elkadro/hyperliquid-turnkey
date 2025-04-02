@@ -57,20 +57,49 @@ class ExchangeAPI {
         return index;
     }
     async placeOrder(orderRequest) {
+        const grouping = orderRequest.grouping || "na";
+        let builder = orderRequest.builder;
+        // Normalize builder address to lowercase if it exists
+        if (builder) {
+            builder = {
+                ...builder,
+                address: builder.address?.toLowerCase() || builder.b?.toLowerCase()
+            };
+        }
+        const ordersArray = orderRequest.orders ?? [orderRequest];
         try {
-            const assetIndex = await this.getAssetIndex(orderRequest.coin);
-            console.log("Hyperliquid sdk: place order turnkey signer inner address: ", await this.turnkeySigner.getAddress());
-            console.log("Hyperliquid sdk: place order turnkey signer class address: ", await this.turnkeySignerAddress);
-            const orderWire = (0, signing_1.orderRequestToOrderWire)(orderRequest, assetIndex);
-            const action = (0, signing_1.orderWiresToOrderAction)([orderWire]);
+            const assetIndexCache = new Map();
+            // const assetIndex = await this.getAssetIndex(orderRequest.coin);
+            // Normalize price and size values to remove trailing zeros
+            const normalizedOrders = ordersArray.map((order) => {
+                const normalizedOrder = { ...order };
+                // Handle price normalization
+                if (typeof normalizedOrder.limit_px === 'string') {
+                    normalizedOrder.limit_px = (0, signing_1.removeTrailingZeros)(normalizedOrder.limit_px);
+                }
+                // Handle size normalization
+                if (typeof normalizedOrder.sz === 'string') {
+                    normalizedOrder.sz = (0, signing_1.removeTrailingZeros)(normalizedOrder.sz);
+                }
+                return normalizedOrder;
+            });
+            const orderWires = await Promise.all(normalizedOrders.map(async (o) => {
+                let assetIndex = assetIndexCache.get(o.coin);
+                if (assetIndex === undefined) {
+                    assetIndex = await this.getAssetIndex(o.coin);
+                    assetIndexCache.set(o.coin, assetIndex);
+                }
+                return (0, signing_1.orderToWire)(o, assetIndex);
+            }));
+            const actions = (0, signing_1.orderWireToAction)(orderWires, grouping, builder);
             const nonce = this.generateUniqueNonce();
-            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, action, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
+            const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, actions, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
             let payload;
             if (orderRequest.vaultAddress) {
-                payload = { action, nonce, signature, vaultAddress: orderRequest.vaultAddress };
+                payload = { action: actions, nonce, signature, vaultAddress: orderRequest.vaultAddress };
             }
             else {
-                payload = { action, nonce, signature };
+                payload = { action: actions, nonce, signature };
             }
             return this.httpApi.makeRequest(payload, 1);
         }

@@ -1,7 +1,7 @@
 import { RateLimiter } from '../utils/rateLimiter';
 import { InfoAPI } from './info';
 import { CancelOrderResponse } from '../utils/signing';
-import { CreateVaultResponse, CancelOrderRequest, OrderRequest } from '../types/index';
+import { CreateVaultResponse, CancelOrderRequest, OrderRequest, Order } from '../types/index';
 import { SymbolConversion } from '../utils/symbolConversion';
 import { Hyperliquid } from '../index';
 export declare class ExchangeAPI {
@@ -18,7 +18,7 @@ export declare class ExchangeAPI {
     private lastNonceTimestamp;
     constructor(testnet: boolean, turnkeySigner: any, info: InfoAPI, rateLimiter: RateLimiter, symbolConversion: SymbolConversion, walletAddress: (string | null) | undefined, parent: Hyperliquid, vaultAddress?: string | null, _proxy?: string | undefined);
     private getAssetIndex;
-    placeOrder(orderRequest: OrderRequest): Promise<any>;
+    placeOrder(orderRequest: OrderRequest | Order): Promise<any>;
     cancelOrder(cancelRequests: CancelOrderRequest | CancelOrderRequest[], vaultAddress?: string): Promise<CancelOrderResponse>;
     cancelOrderByCloid(symbol: string, cloid: string, vaultAddress?: string): Promise<any>;
     modifyOrder(oid: number, orderRequest: OrderRequest): Promise<any>;

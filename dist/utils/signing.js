@@ -11,6 +11,8 @@ exports.floatToIntForHashing = floatToIntForHashing;
 exports.floatToUsdInt = floatToUsdInt;
 exports.getTimestampMs = getTimestampMs;
 exports.orderRequestToOrderWire = orderRequestToOrderWire;
+exports.orderToWire = orderToWire;
+exports.orderWireToAction = orderWireToAction;
 exports.removeTrailingZeros = removeTrailingZeros;
 exports.normalizeTrailingZeros = normalizeTrailingZeros;
 exports.cancelOrderToAction = cancelOrderToAction;
@@ -172,6 +174,33 @@ function orderRequestToOrderWire(order, asset) {
         orderWire.c = order.cloid;
     }
     return orderWire;
+}
+function orderToWire(order, asset) {
+    const orderWire = {
+        a: asset,
+        b: order.is_buy,
+        p: typeof order.limit_px === 'string' ? removeTrailingZeros(order.limit_px) : floatToWire(order.limit_px),
+        s: typeof order.sz === 'string' ? removeTrailingZeros(order.sz) : floatToWire(order.sz),
+        r: order.reduce_only,
+        t: orderTypeToWire(order.order_type),
+    };
+    if (order.cloid !== undefined) {
+        orderWire.c = order.cloid;
+    }
+    return orderWire;
+}
+function orderWireToAction(orders, grouping = "na", builder) {
+    return {
+        type: 'order',
+        orders: orders,
+        grouping: grouping,
+        ...(builder !== undefined ? {
+            builder: {
+                b: builder.address.toLowerCase(),
+                f: builder.fee
+            }
+        } : {})
+    };
 }
 /**
  * Removes trailing zeros from a string representation of a number.
