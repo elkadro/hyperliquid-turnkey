@@ -22,9 +22,10 @@ export function orderTypeToWire(orderType: OrderType): OrderType {
         return { limit: orderType.limit };
     } else if (orderType.trigger) {
         return {
+            // Their order is important
             trigger: {
-                triggerPx: floatToWire(Number(orderType.trigger.triggerPx)),
                 isMarket: orderType.trigger.isMarket,
+                triggerPx: floatToWire(Number(orderType.trigger.triggerPx)),
                 tpsl: orderType.trigger.tpsl,
             },
         };
@@ -66,7 +67,6 @@ export async function signL1Action(
     nonce: number,
     isMainnet: boolean,
 ): Promise<Signature> {
-    console.log("Vault address: ", activePool);
     const hash = actionHash(action, activePool, nonce);
     const phantomAgent = constructPhantomAgent(hash, isMainnet);
     const data = {
@@ -202,8 +202,6 @@ export function orderRequestToOrderWire(order: OrderRequest, asset: number): Ord
         r: order.reduce_only,
         t: orderTypeToWire(order.order_type),
     };
-    console.log("Order wire: ");
-    console.log(orderWire);
     if (order.cloid !== undefined) {
         orderWire.c = order.cloid;
     }

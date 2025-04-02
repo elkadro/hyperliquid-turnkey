@@ -96,7 +96,7 @@ class ExchangeAPI {
             const signature = await (0, signing_1.signL1Action)(this.turnkeySigner, actions, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
             let payload;
             if (orderRequest.vaultAddress) {
-                payload = { action: actions, nonce, signature, vaultAddress: orderRequest.vaultAddress };
+                payload = { action: actions, nonce, signature, vaultAddress: orderRequest.vaultAddress || null };
             }
             else {
                 payload = { action: actions, nonce, signature };

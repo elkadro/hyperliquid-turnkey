@@ -38,8 +38,8 @@ function orderTypeToWire(orderType) {
     else if (orderType.trigger) {
         return {
             trigger: {
-                triggerPx: floatToWire(Number(orderType.trigger.triggerPx)),
                 isMarket: orderType.trigger.isMarket,
+                triggerPx: floatToWire(Number(orderType.trigger.triggerPx)),
                 tpsl: orderType.trigger.tpsl,
             },
         };
@@ -71,7 +71,6 @@ function constructPhantomAgent(hash, isMainnet) {
     return { source: isMainnet ? 'a' : 'b', connectionId: hash };
 }
 async function signL1Action(turnkeySigner, action, activePool, nonce, isMainnet) {
-    console.log("Vault address: ", activePool);
     const hash = actionHash(action, activePool, nonce);
     const phantomAgent = constructPhantomAgent(hash, isMainnet);
     const data = {
@@ -168,8 +167,6 @@ function orderRequestToOrderWire(order, asset) {
         r: order.reduce_only,
         t: orderTypeToWire(order.order_type),
     };
-    console.log("Order wire: ");
-    console.log(orderWire);
     if (order.cloid !== undefined) {
         orderWire.c = order.cloid;
     }

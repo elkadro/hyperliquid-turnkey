@@ -128,12 +128,11 @@ export class ExchangeAPI {
       const signature = await signL1Action(this.turnkeySigner, actions, orderRequest.vaultAddress || null, nonce, this.IS_MAINNET);
       let payload;
       if(orderRequest.vaultAddress) {
-        payload = { action: actions, nonce, signature, vaultAddress: orderRequest.vaultAddress };
+        payload = { action: actions, nonce, signature, vaultAddress: orderRequest.vaultAddress || null };
       }
       else {
         payload = { action: actions, nonce, signature };
       }
-    
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
