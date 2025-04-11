@@ -35,6 +35,10 @@ class HttpApi {
             });
             // const response = await this.client.post(endpoint, payload);
             console.log(`Hyperliquid SDK: Request of ${endpoint} took ${Date.now() - past}ms`);
+            // Check if response data is null or undefined before returning
+            if (response.data === null || response.data === undefined) {
+                throw new Error('Received null or undefined response data');
+            }
             return response.data;
         }
         catch (error) {

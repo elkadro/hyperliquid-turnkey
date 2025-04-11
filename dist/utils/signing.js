@@ -37,6 +37,7 @@ function orderTypeToWire(orderType) {
     }
     else if (orderType.trigger) {
         return {
+            // Their order is important
             trigger: {
                 isMarket: orderType.trigger.isMarket,
                 triggerPx: floatToWire(Number(orderType.trigger.triggerPx)),
